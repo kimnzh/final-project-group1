@@ -25,9 +25,9 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 		printf("|| Total SKS Lulus           ||                                                    ||\n");
 		printf("||  %                     -*d||                                                    ||\n",25,user.totalPassedCredits);
 		printf("|| Total Mutu                ||                                                    ||\n");
-		printf("||  %                     -*d||                                                    ||\n",25,user.totalGradePoints);
+		printf("||  %                   -*.2f||                                                    ||\n",25,user.totalGradePoints);
 		printf("|| IPK                       ||                                                    ||\n");
-		printf("||  %                     -*d||                                                    ||\n",25,user.gpa);
+		printf("||  %                   -*.2f||                                                    ||\n",25,user.gpa);
 		printf("|| SKS Diperoleh             ||                                                    ||\n");
 		printf("||  %                     -*d||                                                    ||\n",25,user.totalPassedCredits);
 		printf("++===========================++====================================================++\n");

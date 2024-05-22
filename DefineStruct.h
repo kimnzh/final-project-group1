@@ -4,6 +4,7 @@
 #define MAX_COURSES 50
 #define MAX_SEMESTERS 8
 #define MAX_DOSEN 3
+#define MAX_APPEND_LENGTH 100
 
 typedef struct Course{
     char courseCode[10];
@@ -25,6 +26,7 @@ typedef struct {
     int batch;
     char advisorNumber[15];
     char advisorName[25];
+    char password[20];
     char academicStatus[20];
     int totalPassedCredits;
     float totalGradePoints;
@@ -33,14 +35,15 @@ typedef struct {
     int semesterSekarang;
     float semesterGrades[8]; 
     int jumlahNilai[8];
-    Course *courses_head; 
     int totalCourses;
-	int maximumCourses; 
+	int maximumCourses;
+	Course *courses_head;  
 } AcademicUser;
 
 typedef struct {
 	char advisorNumber[15];
     char advisorName[25];
+    char password[20];
 } Dosen;
 
 // List of available courses

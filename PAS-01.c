@@ -8,6 +8,8 @@ Anggota Kelompok 1:
 
 Versi Program : 1.0
 
+DISCLAIMER : 
+Program ini masih terus diubah/direvisi seiring berjalannya waktu dan mungkin berbeda dengan file yang diupload di Emas.
 Untuk mendapatkan versi terbaru dan penjelasan lebih lanjut, dapat melewati link github kami :
 
 
@@ -40,15 +42,20 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 #include "DefineStruct.h"
 #include "Functions.h"
 #include "MainMenu.h"
-
+#include "Filehandling.h"
+#include "StringManipule.h"
 
 
 int main(){
-	AcademicUser user;
-	    
+	char source[100] = "akademik_", app[MAX_APPEND_LENGTH];
+    AcademicUser student = {0};
+    Dosen advisor = {0};
 	int size = 0;
-	
-
-	mainMenuMahasiswa(user, &size);
+	loadStudentData(&student, "data_mahasiswa.txt");
+    loadAdvisorData(&advisor, "data_dosen.txt");
+	sprintf(app, "%s.txt",student.name);
+    append(source, app);
+    loadCourses(&student, source);
+	mainMenuMahasiswa(student, &size);
 	return 0;
 }
