@@ -3,10 +3,10 @@ void addCourse(AcademicUser *user);
 void viewCourses(AcademicUser user);
 void removeCourse(AcademicUser *user, int *size);
 void showGrades(AcademicUser user);
-void searchCourse(AcademicUser user, int size);
-void payment(AcademicUser user, int size);
+void searchCourse(char searchTerm []);
+void payment(AcademicUser *user);
 void programGuide();
-void updateProfile(AcademicUser *user, int *size);
+void updateProfile(AcademicUser *user);
 void saveData(AcademicUser user, int size);
 void printHistogram(float* grade, int size);
 void approveCourse(AcademicUser *user, int *size);
@@ -99,4 +99,169 @@ void TampilkanPilihanMataKuliah(AcademicUser *user) {
     if (!found) {
         printf("Maaf, anda belum memilih matakuliah untuk semester ini\n");
     }
+}
+
+void deleteCourse(AcademicUser *user) {
+    int choice;
+
+    printf("++===========================++===============================++\n");
+    printf("||   UNIVERSITAS PROGLAN 2   ||   DAFTAR MATA KULIAH          ||\n");
+    printf("++===========================++===============================++\n");
+
+    // Print the courses currently taken by the user
+    Course *currentCourse = user->courses_head;
+    int courseIndex = 1;
+    while (currentCourse != NULL) {
+        printf("|| %d. %-50s %d SKS (%s) ||\n", courseIndex, currentCourse->courseName, currentCourse->credits, currentCourse->status == 0 ? "Belum disetujui" : "Sudah disetujui");
+        currentCourse = currentCourse->next;
+        courseIndex++;
+    }
+
+    printf("++============================================================++\n\n");
+    printf("Pilih mata kuliah yang akan dibatalkan (masukkan nomor): ");
+    scanf("%d", &choice);
+    choice--; // To match array index (0-based)
+
+    if (choice >= 0 && choice < user->totalCourses) {
+        // Find the course to delete
+        Course *prevCourse = NULL;
+        currentCourse = user->courses_head;
+        for (int i = 0; i < choice; i++) {
+            prevCourse = currentCourse;
+            currentCourse = currentCourse->next;
+        }
+
+        if (currentCourse->status == 1) {
+            printf("Mata kuliah sudah disetujui dan tidak dapat dibatalkan.\n");
+            return;
+        }
+
+        if (prevCourse == NULL) {
+            // Deleting the first node
+            user->courses_head = currentCourse->next;
+        } else {
+            prevCourse->next = currentCourse->next;
+        }
+
+        free(currentCourse);
+        user->totalCourses--;
+        printf("Mata kuliah berhasil dibatalkan.\n");
+    } else {
+        printf("Pilihan tidak valid.\n");
+    }
+}
+
+void searchCourse(char searchTerm []) {
+    int found = 0;
+    printf("++============================================================================++\n");
+    printf("|| No | Kode MK |          Nama Mata Kuliah          | SKS | Status           ||\n");
+    printf("++============================================================================++\n");
+
+    for (int i = 0; i < sizeof(availableCourses) / sizeof(availableCourses[0]); ++i) {
+        // Menggunakan strstr untuk mencari kata kunci tanpa memperhatikan case sensitive
+        if (strstr(availableCourses[i].courseCode, searchTerm) != NULL || 
+            strstr(availableCourses[i].courseName, searchTerm) != NULL) {
+            printf("|| %-2d | %-7s | %-34s | %-3d | %-1s ||\n", i + 1, availableCourses[i].courseCode, 
+                   availableCourses[i].courseName, availableCourses[i].credits, 
+                   availableCourses[i].status == 0 ? "Belum disetujui" : "Sudah disetujui");
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("|| Tidak ada matakuliah yang cocok dengan pencarian Anda                      ||\n");
+    }
+    printf("++============================================================================++\n");
+}
+
+void getAccess(AcademicUser user) {
+	int i, ch;
+	char buffer[50];
+
+	do {
+		i = 0;
+		printf("Masukkan PASSWORD: ");
+
+		do {
+			ch = getch();
+			if (ch == ' ' || ch == 27) {
+				continue;
+			} else if (ch == '\b') {
+				if (i > 0) {
+					printf("\b \b");
+					--i;
+				} else {
+					continue;
+				}
+			} else if (ch == '\r' || ch == '\t') {
+				break;
+			} else if (ch == 0 || ch == 224) {
+				ch = getch();
+				continue;
+			} else {
+				buffer[i++] = ch;
+				printf("*");
+			}
+		} while(1);
+
+		buffer[i] = '\0';
+		printf("\n");
+
+		if (strcmp(user.password, buffer) != 0) {
+			system("cls");
+			printf("Nama atau PASSWORD yang dimasukkan salah\n\n");
+			printf("Press ANY key to continue!");
+			getch();
+			system("cls");
+		} else if (strcmp(user.password, buffer) == 0) {
+			system("cls");
+			return;
+		}
+	} while (strcmp != 0);
+}
+
+void getAccessDosen(Dosen user) {
+	int i, ch;
+	char buffer[50];
+
+	do {
+		i = 0;
+		printf("Masukkan PASSWORD: ");
+
+		do {
+			ch = getch();
+			if (ch == ' ' || ch == 27) {
+				continue;
+			} else if (ch == '\b') {
+				if (i > 0) {
+					printf("\b \b");
+					--i;
+				} else {
+					continue;
+				}
+			} else if (ch == '\r' || ch == '\t') {
+				break;
+			} else if (ch == 0 || ch == 224) {
+				ch = getch();
+				continue;
+			} else {
+				buffer[i++] = ch;
+				printf("*");
+			}
+		} while(1);
+
+		buffer[i] = '\0';
+		printf("\n");
+
+		if (strcmp(user.password, buffer) != 0) {
+			system("cls");
+			printf("Nama atau PASSWORD yang dimasukkan salah\n\n");
+			printf("Press ANY key to continue!");
+			getch();
+			system("cls");
+		} else if (strcmp(user.password, buffer) == 0) {
+			system("cls");
+			return;
+		}
+	} while (strcmp != 0);
 }

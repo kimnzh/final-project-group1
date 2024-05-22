@@ -85,3 +85,79 @@ void loadCourses(AcademicUser *student, const char *filename) {
     
     fclose(file);
 }
+
+// Function to write student data to a file
+void writeStudentData(AcademicUser *student, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Failed to open student data file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "%s\n", student->npm);
+    fprintf(file, "%s\n", student->name);
+    fprintf(file, "%d\n", student->batch);
+    fprintf(file, "%s\n", student->advisorNumber);
+    fprintf(file, "%s\n", student->advisorName);
+    fprintf(file, "%s\n", student->password);
+    fprintf(file, "%s\n", student->academicStatus);
+    fprintf(file, "%d\n", student->totalPassedCredits);
+    fprintf(file, "%.2f\n", student->totalGradePoints);
+    fprintf(file, "%.2f\n", student->gpa);
+    fprintf(file, "%d\n", student->tagihan);
+    fprintf(file, "%d\n", student->semesterSekarang);
+    for (int i = 0; i < 8; i++) {
+        fprintf(file, "%.2f ", student->semesterGrades[i]);
+    }
+    fprintf(file,"\n");
+    for (int i = 0; i < 8; i++) {
+        fprintf(file, "%d ", student->jumlahNilai[i]);
+    }
+    fprintf(file,"\n");
+    fprintf(file, "%d\n", student->totalCourses);
+    fprintf(file, "%d\n", student->maximumCourses);
+
+    fclose(file);
+}
+
+// Function to write advisor data to a file
+void writeAdvisorData(Dosen *advisor, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Failed to open advisor data file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "%s\n", advisor->advisorNumber);
+    fprintf(file, "%s\n", advisor->advisorName);
+    fprintf(file, "%s\n", advisor->password);
+
+    fclose(file);
+}
+
+// Function to write courses to a file
+void writeCourses(AcademicUser *student, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Failed to open courses file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    Course *currentCourse = student->courses_head;
+    while (currentCourse != NULL) {
+        fprintf(file, "%s\n", currentCourse->courseCode);
+        fprintf(file, "%s\n", currentCourse->courseName);
+        fprintf(file, "%.2f\n", currentCourse->tugas);
+        fprintf(file, "%.2f\n", currentCourse->uas);
+        fprintf(file, "%.2f\n", currentCourse->uts);
+        fprintf(file, "%.2f\n", currentCourse->kuis);
+        fprintf(file, "%.2f\n", currentCourse->score);
+        fprintf(file, "%d\n", currentCourse->credits);
+        fprintf(file, "%s\n", currentCourse->grade);
+        fprintf(file, "%d\n", currentCourse->status);
+        currentCourse = currentCourse->next;
+    }
+
+    fclose(file);
+}
+

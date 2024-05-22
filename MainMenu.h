@@ -10,8 +10,16 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 	int cekNilai;
 	int opsi = -1;
 	char opsiString[50];
+	char search[50];
+	char pembayaran [15];
 
 	do {
+		if(user.tagihan == 0){
+			strcpy(pembayaran, "LUNAS");
+		}
+		else{
+			strcpy(pembayaran, "BELUM LUNAS");
+		}
 		printf("++===========================++=========================================================++\n");
 		printf("||   UNIVERSITAS PROGLAN 2   ||              SISTEM AKADEMIK MAHASISWA                  ||\n");
 		printf("||                           |+===+=====================================================||\n");
@@ -38,6 +46,8 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 		printf("||  %                   -*.2f|||____/ \\___|\\__,_|\\___|_|  |_| |_|\\__,_|_| |_|\\__,_|     ||\n",25,user.gpa);
 		printf("|| SKS Diperoleh             ||                                                         ||\n");
 		printf("||  %                     -*d||                                                         ||\n",25,user.totalPassedCredits);
+		printf("|| Status Pembayaran         ||                                                         ||\n");
+		printf("||  %                     -*s||                                                         ||\n",25,pembayaran);
 		printf("++===========================++=========================================================++\n");
 		printf("|| Grafik Semester Anda :    ||\n");
 		printf("||===========================||\n\n");		
@@ -63,7 +73,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 				break;
 			case 3:
 				system("cls");
-				
+				deleteCourse(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
@@ -77,25 +87,43 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 				break;
 			case 5:
 				system("cls");
-				
+				printf("Ketik matakuliah yang ingin anda cari : ");
+				scanf(" %[^\n]",&search);
+				searchCourse(search);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 				break;
 			case 6:
-				system("cls");
-				
-				printf("Press ANY key to continue!");
-				getch();
-				system("cls");
-				break;
+    			system("cls");
+    			printf("Tagihan UKT semester ini: %d\n", user.tagihan);
+    			if (user.tagihan == 0) {
+        			printf("Tagihan UKT untuk semester ini telah lunas.\n");
+    			} 
+				else {
+        			printf("Anda memiliki tagihan UKT sebesar %d. Silakan lakukan pembayaran.\n", user.tagihan);
+        			printf("Apakah Anda ingin melakukan pembayaran sekarang? (1 untuk ya, 0 untuk tidak): ");
+        			int bayar;
+        			scanf("%d", &bayar);
+        			if (bayar == 1) {
+            			printf("Pembayaran UKT berhasil dilakukan. Tagihan Anda sekarang adalah 0.\n");
+            			user.tagihan = 0; // Set tagihan menjadi 0 karena telah dilakukan pembayaran
+        			} 
+					else {
+            			printf("Pembayaran UKT dibatalkan.\n");
+        			}
+    			}
+    			printf("Press ANY key to continue!");
+    			getch();
+    			system("cls");
+    			break;
 			case 7:
 				system("cls");
 				programGuide();
 				break;
 			case 8:
 				system("cls");
-				
+				updateProfile(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
@@ -119,8 +147,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 void showGrades(AcademicUser user) {
     const char* nilaiString[] = {"A", "B+", "B", "C+", "C", "D+", "D", "E"};
     int jumlahNilai[8] = {0};  // Initialize count of each grade to 0
-
-    // Count occurrences of each grade from the list of courses
+    // Print the list of graded courses
     Course *currentCourse = user.courses_head;
     while (currentCourse != NULL) {
         for (int j = 0; j < 8; j++) {
@@ -131,8 +158,6 @@ void showGrades(AcademicUser user) {
         }
         currentCourse = currentCourse->next;
     }
-
-    // Display the results
     printf("||===========================||\n");
     printf("|| Statistik Nilai:          ||\n");
     printf("||===========================||\n");
@@ -141,14 +166,57 @@ void showGrades(AcademicUser user) {
     for (int i = 0; i < 8; i++) {
         if (jumlahNilai[i] != 0) {
             cekNilai++;
-            printf("|| %-15s    %-5d ||\n", nilaiString[i], jumlahNilai[i]);
+            printf("|| %-15s    %-5d  ||\n", nilaiString[i], jumlahNilai[i]);
         }
     }
     if (cekNilai == 0) {
         printf("|| -                 -       ||\n");
     }
-    printf("||===========================||\n");      
+    printf("||===========================||\n\n");
+    currentCourse = user.courses_head;
+    int courseIndex = 1;
+    while (currentCourse != NULL) {
+        if (strcmp(currentCourse->grade, "") != 0) {
+            printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
+            courseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    // Prompt user to select a course to view grades
+    printf("\nPilih nomor matakuliah untuk menampilkan nilai lengkap: ");
+    int choice;
+    scanf("%d", &choice);
+    choice--; // To match array index (0-based)
+
+    // Find the selected course
+    currentCourse = user.courses_head;
+    int selectedCourseIndex = 0;
+    while (currentCourse != NULL) {
+        if (strcmp(currentCourse->grade, "") != 0) {
+            if (selectedCourseIndex == choice) {
+                printf("\n++================================================++\n");
+                printf("||          NILAI LENGKAP MATAKULIAH              ||\n");
+                printf("++================================================++\n");
+                printf("|| Nama Matakuliah   : %-26s ||\n", currentCourse->courseName);
+                printf("|| Kode Matakuliah   : %-26s ||\n", currentCourse->courseCode);
+                printf("|| Nilai Total       : %-26s ||\n", currentCourse->grade);
+                printf("|| Nilai Kuis        : %-26.2f ||\n", currentCourse->kuis);
+                printf("|| Nilai UAS         : %-26.2f ||\n", currentCourse->uas);
+                printf("|| Nilai UTS         : %-26.2f ||\n", currentCourse->uts);
+                printf("|| Nilai Tugas       : %-26.2f ||\n", currentCourse->tugas);
+                printf("++================================================++\n\n");
+                return;
+            }
+            selectedCourseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    printf("Nomor matakuliah yang Anda pilih tidak valid atau tidak memiliki nilai.\n");
 }
+
+
 
 
 void printHistogram(float *grade, int size) {
@@ -234,4 +302,44 @@ void programGuide() {
     printf("|- Membayar UKT untuk menjaga status aktif                     |\n");
     printf("|- Melihat Chart/Data nilai semester/semasa kuliah             |\n");
     printf("|++===========================++==============================++\n");
+}
+
+void updateProfile(AcademicUser *user) {
+    printf("== Update Profil Mahasiswa ==\n");
+    printf("Pilihan:\n");
+    printf("1. Ubah Nama\n");
+    printf("2. Ubah Password\n");
+    printf("3. Kembali ke Menu Utama\n");
+
+    int choice;
+    printf("Masukkan pilihan: ");
+    scanf("%d", &choice);
+
+    switch(choice) {
+        case 1:
+            printf("Masukkan nama baru: ");
+            scanf(" %[^\n]", user->name);
+            printf("Nama berhasil diubah!\n");
+            break;
+        case 2:
+            char currentPassword[50];
+            char newPassword[50];
+            printf("Masukkan password saat ini: ");
+            scanf(" %[^\n]", currentPassword);
+            // Proses verifikasi password saat ini
+            if(strcmp(currentPassword, user->password) == 0) {
+                printf("Masukkan password baru: ");
+                scanf(" %[^\n]", newPassword);
+                strcpy(user->password, newPassword);
+                printf("Password berhasil diubah!\n");
+            } else {
+                printf("Password saat ini salah. Tidak dapat mengubah password.\n");
+            }
+            break;
+        case 3:
+            printf("Kembali ke Menu Utama.\n");
+            break;
+        default:
+            printf("Pilihan tidak valid.\n");
+    }
 }

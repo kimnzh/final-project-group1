@@ -30,7 +30,7 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 - Membayar UKT untuk menjaga status aktif sebagai mahasiswa
 - Melihat Chart/Data nilai semester/semasa kuliah
 */
-
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,11 +51,28 @@ int main(){
     AcademicUser student = {0};
     Dosen advisor = {0};
 	int size = 0;
+	int mode;
 	loadStudentData(&student, "data_mahasiswa.txt");
     loadAdvisorData(&advisor, "data_dosen.txt");
 	sprintf(app, "%s.txt",student.name);
     append(source, app);
     loadCourses(&student, source);
-	mainMenuMahasiswa(student, &size);
+    printf("Pilih akun yang ingin digunakan : \n");
+    printf("1. Mahasiswa  \n");
+    printf("2. Dosen \n");
+    printf("Pilihan : ");
+    scanf("%d",&mode);
+    printf("\n");
+    if(mode == 1){
+    	getAccess(student);
+		mainMenuMahasiswa(student, &size);
+	}
+	else{
+		getAccessDosen(advisor);
+		mainMenuDosen(student,advisor,&size);
+	}
+	writeAdvisorData(&advisor, "data_dosen.txt");
+	writeStudentData(&student, "data_mahasiswa.txt");
+	writeCourses(&student, source);
 	return 0;
 }
