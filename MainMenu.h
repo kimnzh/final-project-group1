@@ -164,6 +164,9 @@ void mainMenuMahasiswa(AcademicUser user, int *size,char source[]) {
 			case 7:
 				system("cls");
 				programGuide();
+				printf("Press ANY key to continue!");
+				getch();
+				system("cls");
 				break;
 			case 8:
 				system("cls");
