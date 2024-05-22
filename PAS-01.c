@@ -41,8 +41,8 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 #include <math.h>
 #include "DefineStruct.h"
 #include "Functions.h"
-#include "MainMenu.h"
 #include "Filehandling.h"
+#include "MainMenu.h"
 #include "StringManipule.h"
 
 
@@ -65,14 +65,11 @@ int main(){
     printf("\n");
     if(mode == 1){
     	getAccess(student);
-		mainMenuMahasiswa(student, &size);
+		mainMenuMahasiswa(student, &size,source);
 	}
 	else{
 		getAccessDosen(advisor);
-		mainMenuDosen(student,advisor,&size);
+		mainMenuDosen(student,advisor,&size,source);
 	}
-	writeAdvisorData(&advisor, "data_dosen.txt");
-	writeStudentData(&student, "data_mahasiswa.txt");
-	writeCourses(&student, source);
 	return 0;
 }

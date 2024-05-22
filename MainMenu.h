@@ -1,12 +1,56 @@
-void mainMenuDosen(AcademicUser user,Dosen advisor, int *size) {
+void mainMenuDosen(AcademicUser user,Dosen advisor, int *size, char source[]) {
 	int opsi = -1;
 	char opsiString[50];
-	do{
-			
-	}while(1);
+	do {
+        printf("++===========================++=========================================================++\n");
+        printf("||   UNIVERSITAS PROGLAN 2   ||              SISTEM AKADEMIK (DOSEN)                    ||\n");
+        printf("||                           |+===+=====================================================++\n");
+        printf("|+===========================+| 1 | Beri nilai pada matakuliah yang sudah disetujui     ||\n");
+        printf("|| NIP                       || 2 | Setujui matakuliah yang dipilih mahasiswa           ||\n");
+        printf("||  %                     -*s|| 3 | Keluar                                              ||\n", 25, user.advisorNumber);
+        printf("||===========================||   |                                                     ||\n");
+        printf("|| Nama                      ||   |                                                     ||\n");
+        printf("||  %                     -*s||===+=====================================================++\n", 25, user.advisorName);
+        printf("|| Pembimbing Akademis Dari  ||                                                         ||\n");
+        printf("||  %                     -*s||                                                         ||\n", 25, user.name);
+        printf("++===========================++=========================================================||\n");	
+         printf("Pilihan: ");
+        scanf(" %[^\n]", opsiString);
+        opsi = atoi(opsiString);
+
+        switch (opsi) {
+            case 1:
+                system("cls");
+                beriNilai(&user);
+                printf("Tekan tombol ANY untuk melanjutkan!");
+                getch();
+                system("cls");
+                break;
+            case 2:
+                system("cls");
+                setujuiMatakuliah(&user);
+                printf("Tekan tombol ANY untuk melanjutkan!");
+                getch();
+                system("cls");
+                break;
+            case 3:
+                system("cls");
+                printf("Terima kasih telah menggunakan program ini!\n\n");
+                writeStudentData(&user, "data_mahasiswa.txt");
+				writeCourses(&user, source);
+                printf("Tekan tombol ANY untuk melanjutkan!");
+                getch();
+                break;
+            default:
+                printf("Input tidak valid\n");
+                printf("Tekan tombol ANY untuk melanjutkan!");
+                getch();
+                system("cls");
+        }
+    } while (opsi != 3); 
 }
 
-void mainMenuMahasiswa(AcademicUser user, int *size) {
+void mainMenuMahasiswa(AcademicUser user, int *size,char source[]) {
 	int cekNilai;
 	int opsi = -1;
 	char opsiString[50];
@@ -132,6 +176,8 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 				
 				system("cls");
 				printf("Terimakasih karena sudah menggunakan program ini!\n\n");
+				writeStudentData(&user, "data_mahasiswa.txt");
+				writeCourses(&user, source);
 				printf("Press ANY key to continue!");
 				getch();
 				break;

@@ -1,4 +1,4 @@
-void mainMenuMahasiswa(AcademicUser user, int *size);
+void mainMenuMahasiswa(AcademicUser user, int *size,char source[]);
 void addCourse(AcademicUser *user);
 void viewCourses(AcademicUser user);
 void removeCourse(AcademicUser *user, int *size);
@@ -264,4 +264,131 @@ void getAccessDosen(Dosen user) {
 			return;
 		}
 	} while (strcmp != 0);
+}
+
+void beriNilai(AcademicUser *user) {
+    // Lakukan iterasi melalui daftar matakuliah yang sudah disetujui
+    float floatSkor;
+    Course *currentCourse = user->courses_head;
+    int courseIndex = 1;
+    printf("++================================================++\n");
+    printf("||         BERI NILAI MATAKULIAH MAHASISWA        ||\n");
+    printf("++================================================++\n");
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 1) {
+            printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
+            courseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    // Meminta input nilai dari dosen untuk setiap matakuliah
+    printf("\nMasukkan nomor matakuliah untuk memberi nilai lengkap: ");
+    int choice;
+    scanf("%d", &choice);
+    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
+
+    currentCourse = user->courses_head;
+    int selectedCourseIndex = 0;
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 1) {
+            if (selectedCourseIndex == choice) {
+                printf("\n++================================================++\n");
+                printf("||           BERI NILAI MATAKULIAH               ||\n");
+                printf("++================================================++\n");
+                printf("|| Nama Matakuliah   : %-26s ||\n", currentCourse->courseName);
+                printf("|| Kode Matakuliah   : %-26s ||\n", currentCourse->courseCode);
+                printf("|| Nilai Kuis        : ");
+                scanf("%f", &currentCourse->kuis);
+                printf("|| Nilai UAS         : ");
+                scanf("%f", &currentCourse->uas);
+                printf("|| Nilai UTS         : ");
+                scanf("%f", &currentCourse->uts);
+                printf("|| Nilai Tugas       : ");
+                scanf("%f", &currentCourse->tugas);
+                // Hitung total nilai dan simpan dalam struktur data
+                currentCourse->score = (currentCourse->kuis + currentCourse->uas + currentCourse->uts + currentCourse->tugas) / 4.0;
+                
+                // Update grade dan gradeFloat berdasarkan nilai skor baru
+                if (currentCourse->score > 85) {
+                    strcpy(currentCourse->grade, "A");
+                    floatSkor = 4.0;
+                } else if (currentCourse->score > 80) {
+                    strcpy(currentCourse->grade, "A-");
+                    floatSkor = 3.7;
+                } else if (currentCourse->score > 75) {
+                    strcpy(currentCourse->grade, "B+");
+                    floatSkor = 3.3;
+                } else if (currentCourse->score > 70) {
+                    strcpy(currentCourse->grade, "B");
+                    floatSkor = 3.0;
+                } else if (currentCourse->score > 65) {
+                    strcpy(currentCourse->grade, "B-");
+                    floatSkor = 2.7;
+                } else if (currentCourse->score > 60) {
+                    strcpy(currentCourse->grade, "C+");
+                    floatSkor = 2.3;
+                } else if (currentCourse->score > 55) {
+                    strcpy(currentCourse->grade, "C");
+                    floatSkor = 2.0;
+                } else if (currentCourse->score > 40) {
+                    strcpy(currentCourse->grade, "D");
+                    floatSkor = 1.0;
+                } else {
+                    strcpy(currentCourse->grade, "E");
+                    floatSkor = 0.0;
+                }
+                
+                // Perbarui Total SKS Lulus, Total Mutu, dan IPK mahasiswa
+                user->totalPassedCredits += currentCourse->credits; // Menambahkan SKS dari matakuliah yang dinilai
+                user->totalGradePoints += currentCourse->credits * floatSkor; // Menambahkan total mutu
+                user->gpa = user->totalGradePoints / user->totalPassedCredits; // Menghitung IPK baru
+                user->semesterGrades[user->semesterSekarang-1] += currentCourse->credits * floatSkor/currentCourse->credits;
+                printf("++================================================++\n\n");
+                return;
+            }
+            selectedCourseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+    printf("Nomor matakuliah yang Anda pilih tidak valid atau tidak dapat memberi nilai.\n");
+}
+
+
+
+void setujuiMatakuliah(AcademicUser *user) {
+    Course *currentCourse = user->courses_head;
+    int courseIndex = 1;
+    printf("++================================================++\n");
+    printf("||           SETUJUI MATAKULIAH MAHASISWA        ||\n");
+    printf("++================================================++\n");
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 0) {
+            printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
+            courseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    // Meminta input dari dosen untuk menyetujui matakuliah
+    printf("\nMasukkan nomor matakuliah untuk disetujui: ");
+    int choice;
+    scanf("%d", &choice);
+    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
+
+    currentCourse = user->courses_head;
+    int selectedCourseIndex = 0;
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 0) {
+            if (selectedCourseIndex == choice) {
+                currentCourse->status = 1; // Set status matakuliah menjadi disetujui
+                printf("Matakuliah %s telah disetujui.\n", currentCourse->courseName);
+                user->totalPassedCredits += currentCourse->credits;
+                return;
+            }
+            selectedCourseIndex++;
+        }
+        currentCourse = currentCourse->next;
+    }
+    printf("Nomor matakuliah yang Anda pilih tidak valid atau tidak dapat disetujui.\n");
 }

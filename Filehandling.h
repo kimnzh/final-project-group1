@@ -157,7 +157,7 @@ void writeCourses(AcademicUser *student, const char *filename) {
         fprintf(file, "%d\n", currentCourse->status);
         currentCourse = currentCourse->next;
     }
-
+	
     fclose(file);
 }
 
