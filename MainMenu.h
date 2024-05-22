@@ -1,38 +1,46 @@
+void mainMenuDosen(AcademicUser user,Dosen advisor, int *size) {
+	int opsi = -1;
+	char opsiString[50];
+	do{
+			
+	}while(1);
+}
+
 void mainMenuMahasiswa(AcademicUser user, int *size) {
 	int cekNilai;
 	int opsi = -1;
 	char opsiString[50];
 
 	do {
-		printf("++===========================++====================================================++\n");
-		printf("||   UNIVERSITAS PROGLAN 2   ||              SISTEM AKADEMIK MAHASISWA             ||\n");
-		printf("||                           |+===+================================================||\n");
-		printf("|+===========================+| 1 | Tampilkan pilihan mata kuliah                  ||\n");
-		printf("|| NPM                       || 2 | Tambah pilihan mata kuliah                     ||\n");
-		printf("||  %                     -*s|| 3 | Batalkan pilihan mata kuliah                   ||\n",25,user.npm);
-		printf("||===========================||   |                                                ||\n");
-		printf("|| Nama                      || 4 | Tampilkan nilai mata kuliah                    ||\n");
-		printf("||  %                     -*s|| 5 | Lihat/cari mata kuliah yang tersedia di        ||\n",25,user.name);
-		printf("|| Angkatan                  ||   | semester ini                                   ||\n");
-		printf("||  %                     -*d|| 6 | Lihat tagihan UKT semester ini                 ||\n",25,user.batch);
-		printf("|| Program Studi             || 7 | Panduan Penggunaan Program                     ||\n");
-		printf("||  Teknik Komputer, S1 Reg. || 8 | Update profil mahasiswa                        ||\n");
-		printf("|| Pembimbing Akademis       || 9 | Keluar                                         ||\n");
-		printf("||  %                     -*s||===+================================================++\n",25,user.advisorNumber);
-		printf("||  %                     -*s||                                                    ||\n",25,user.advisorName);
-		printf("|| Status Akademis           ||                                                    ||\n");
-		printf("||  %                     -*s||                                                    ||\n",25,user.academicStatus);
-		printf("|| Total SKS Lulus           ||                                                    ||\n");
-		printf("||  %                     -*d||                                                    ||\n",25,user.totalPassedCredits);
-		printf("|| Total Mutu                ||                                                    ||\n");
-		printf("||  %                   -*.2f||                                                    ||\n",25,user.totalGradePoints);
-		printf("|| IPK                       ||                                                    ||\n");
-		printf("||  %                   -*.2f||                                                    ||\n",25,user.gpa);
-		printf("|| SKS Diperoleh             ||                                                    ||\n");
-		printf("||  %                     -*d||                                                    ||\n",25,user.totalPassedCredits);
-		printf("++===========================++====================================================++\n");
+		printf("++===========================++=========================================================++\n");
+		printf("||   UNIVERSITAS PROGLAN 2   ||              SISTEM AKADEMIK MAHASISWA                  ||\n");
+		printf("||                           |+===+=====================================================||\n");
+		printf("|+===========================+| 1 | Tampilkan pilihan mata kuliah                       ||\n");
+		printf("|| NPM                       || 2 | Tambah pilihan mata kuliah                          ||\n");
+		printf("||  %                     -*s|| 3 | Batalkan pilihan mata kuliah                        ||\n",25,user.npm);
+		printf("||===========================||   |                                                     ||\n");
+		printf("|| Nama                      || 4 | Tampilkan nilai mata kuliah                         ||\n");
+		printf("||  %                     -*s|| 5 | Lihat/cari mata kuliah yang tersedia di             ||\n",25,user.name);
+		printf("|| Angkatan                  ||   | semester ini                                        ||\n");
+		printf("||  %                     -*d|| 6 | Lihat tagihan UKT semester ini                      ||\n",25,user.batch);
+		printf("|| Program Studi             || 7 | Panduan Penggunaan Program                          ||\n");
+		printf("||  Teknik Komputer, S1 Reg. || 8 | Update profil mahasiswa                             ||\n");
+		printf("|| Pembimbing Akademis       || 9 | Keluar                                              ||\n");
+		printf("||  %                     -*s||===+=====================================================++\n",25,user.advisorNumber);
+		printf("||  %                     -*s|| ____  _       _      _   ___                            ||\n",25,user.advisorName);
+		printf("|| Status Akademis           ||/ ___|(_) __ _| | __ / | / _ \\                           ||\n");
+		printf("||  %                     -*s||\\___ \\| |/ _` | |/ / | || | | |                          ||\n",25,user.academicStatus);
+		printf("|| Total SKS Lulus           || ___) | | (_| |   <  | || |_| |                          ||\n");
+		printf("||  %                     -*d|||____/|_|\\__,_|_|\\_\\ |_(_)___/                           ||\n",25,user.totalPassedCredits);
+		printf("|| Total Mutu                ||/ ___|  ___  __| | ___ _ __| |__   __ _ _ __   __ _      ||\n");
+		printf("||  %                   -*.2f||\\___ \\ / _ \\/ _` |/ _ \\ '__| '_ \\ / _` | '_ \\ / _` |     ||\n",25,user.totalGradePoints);
+		printf("|| IPK                       || ___) |  __/ (_| |  __/ |  | | | | (_| | | | | (_| |     ||\n");
+		printf("||  %                   -*.2f|||____/ \\___|\\__,_|\\___|_|  |_| |_|\\__,_|_| |_|\\__,_|     ||\n",25,user.gpa);
+		printf("|| SKS Diperoleh             ||                                                         ||\n");
+		printf("||  %                     -*d||                                                         ||\n",25,user.totalPassedCredits);
+		printf("++===========================++=========================================================++\n");
 		printf("|| Grafik Semester Anda :    ||\n");
-		printf("||===========================||\n");		
+		printf("||===========================||\n\n");		
 		printHistogram(user.semesterGrades, user.semesterSekarang);
 		printf("Pilihan: ");
 		scanf(" %[^\n]", opsiString);
@@ -41,7 +49,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size) {
 		switch(opsi) {
 			case 1:
 				system("cls");
-				
+				TampilkanPilihanMataKuliah(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
@@ -167,9 +175,6 @@ void printHistogram(float *grade, int size) {
         }
         index++;
     } while (index < size);
-
-    printf("\n\tGRAFIK IP SEMESTER ANDA\n\n");
-
     for (yaxis = MAX; yaxis >= 0.1; yaxis--) { // yaxis for histogram
         printf("%8d%c", yaxis, b);
 

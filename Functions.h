@@ -17,18 +17,14 @@ void selectAdvisor(AcademicUser *newStudent, Dosen availableAdvisors[]);
 
 void addCourse(AcademicUser *user) {
     int choice;
-    int courseIndex = 1; // Used for displaying course index
-    Course *currentCourse = user->courses_head;
 
     printf("++===========================++===============================++\n");
     printf("||   UNIVERSITAS PROGLAN 2   ||   DAFTAR MATA KULIAH          ||\n");
     printf("++===========================++===============================++\n");
 
     // Print available courses
-    while (currentCourse != NULL) {
-        printf("|| %d. %-50s %d SKS ||\n", courseIndex, currentCourse->courseName, currentCourse->credits);
-        currentCourse = currentCourse->next;
-        courseIndex++;
+    for (int i = 0; i < sizeof(availableCourses)/sizeof(availableCourses[0]); i++) {
+        printf("|| %d. %-50s %d SKS ||\n", i + 1, availableCourses[i].courseName, availableCourses[i].credits);
     }
 
     printf("++============================================================++\n\n");
@@ -36,17 +32,13 @@ void addCourse(AcademicUser *user) {
     scanf("%d", &choice);
     choice--; // To match array index (0-based)
 
-    // Find the chosen course
-    currentCourse = user->courses_head;
-    for (int i = 0; i < choice && currentCourse != NULL; i++) {
-        currentCourse = currentCourse->next;
-    }
+    if (choice >= 0 && choice < sizeof(availableCourses)/sizeof(availableCourses[0])) {
+        Course *selectedCourse = &availableCourses[choice];
 
-    if (currentCourse != NULL) {
         // Check if the course is already in the user's course list
         Course *tempCourse = user->courses_head;
         while (tempCourse != NULL) {
-            if (strcmp(tempCourse->courseCode, currentCourse->courseCode) == 0) {
+            if (strcmp(tempCourse->courseCode, selectedCourse->courseCode) == 0) {
                 printf("Mata kuliah sudah diambil.\n");
                 return;
             }
@@ -61,7 +53,7 @@ void addCourse(AcademicUser *user) {
                 printf("Memory allocation failed.\n");
                 return;
             }
-            *newCourse = *currentCourse; // Copy course details
+            *newCourse = *selectedCourse; // Copy course details
             newCourse->status = 0; // Set status to not approved
             newCourse->next = NULL;
 
@@ -83,5 +75,28 @@ void addCourse(AcademicUser *user) {
         }
     } else {
         printf("Pilihan tidak valid.\n");
+    }
+}
+
+void TampilkanPilihanMataKuliah(AcademicUser *user) {
+    Course *currentCourse = user->courses_head;
+    int found = 0;
+
+    printf("++===========================++\n");
+    printf("||   Pilihan Mata Kuliah     ||\n");
+    printf("++===========================++\n");
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 0) {
+            printf("Kode Matakuliah: %s\n", currentCourse->courseCode);
+            printf("Nama Matakuliah: %s\n", currentCourse->courseName);
+            printf("SKS: %d\n", currentCourse->credits);
+            printf("Status: %s\n\n", currentCourse->status == 0 ? "Belum Disetujui" : "Telah Disetujui");
+            found = 1;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    if (!found) {
+        printf("Maaf, anda belum memilih matakuliah untuk semester ini\n");
     }
 }
