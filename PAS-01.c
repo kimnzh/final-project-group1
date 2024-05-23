@@ -11,7 +11,7 @@ Versi Program : 1.0
 DISCLAIMER : 
 Program ini masih terus diubah/direvisi seiring berjalannya waktu dan mungkin berbeda dengan file yang diupload di Emas.
 Untuk mendapatkan versi terbaru dan penjelasan lebih lanjut, dapat melewati link github kami :
-
+"https://github.com/kimnzh/final-project-group1"
 
 Deskripsi:
 Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading individu, ataupun grading keseluruhan mahasiswa beserta status mereka sebagai simulasi SIAK sederhana dengan fitur-fitur sebagai berikut:
@@ -39,37 +39,99 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 #include <time.h>
 #include <omp.h>
 #include <math.h>
+
+#define RED "\033[1;31m" //Red
+#define YELLOW "\033[1;33m" //Yellow
+#define GREEN "\033[1;32m" //Green
+#define CYAN "\033[1;36m" //Cyan
+#define BLUE "\033[1;34m" //Blue
+#define MAGENTA "\033[1;35m" //Magenta
+
 #include "DefineStruct.h"
-#include "Functions.h"
-#include "Filehandling.h"
-#include "MainMenu.h"
+#include "Prototype.h"
 #include "StringManipule.h"
 
+#include "ModeDosen/Functions.h"
+#include "ModeMahasiswa/Functions.h"
 
 int main(){
-	char source[100] = "akademik_", app[MAX_APPEND_LENGTH];
+    char appMa[MAX_APPEND_LENGTH], appAk[MAX_APPEND_LENGTH];
+    char namaMahasiswa[50], namaDosen[50];
     AcademicUser student = {0};
     Dosen advisor = {0};
-	int size = 0;
-	int mode;
-	loadStudentData(&student, "data_mahasiswa.txt");
-    loadAdvisorData(&advisor, "data_dosen.txt");
-	sprintf(app, "%s.txt",student.name);
-    append(source, app);
-    loadCourses(&student, source);
-    printf("Pilih akun yang ingin digunakan : \n");
-    printf("1. Mahasiswa  \n");
-    printf("2. Dosen \n");
-    printf("Pilihan : ");
-    scanf("%d",&mode);
-    printf("\n");
-    if(mode == 1){
-    	getAccess(student);
-		mainMenuMahasiswa(student, &size,source);
-	}
-	else{
-		getAccessDosen(advisor);
-		mainMenuDosen(student,advisor,&size,source);
-	}
+	int size = 0; 
+    int stat, pass;
+
+    int mode = -1;
+	char modeString[10];
+	do {
+        char sourceMa[100] = "DatabaseMahasiswa/data_", sourceAk[100] = "DatabaseMahasiswa/data_";
+        system("cls");
+        printf("Pilih akun yang ingin digunakan : \n");
+        printf("1. Mahasiswa\n");
+        printf("2. Dosen\n");
+        printf("0. Exit\n\n");
+        printf("Pilihan : ");
+
+        scanf(" %[^\n]", modeString);
+        if (strcmp(modeString, "0") != 0)
+            strcpy(modeString, "-1");
+        mode = atoi(modeString);
+
+        switch (mode) {
+            case 0:
+                printf("Berhasil keluar program\n\n");
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+                break;
+            case 1:
+                printf("Nama : ");
+                scanf(" %[^\n]", namaMahasiswa);
+
+                // Menyiapkan source dari database
+                sprintf(appMa, "%s/mahasiswa.txt", namaMahasiswa);
+                sprintf(appAk, "%s/akademik.txt", namaMahasiswa);
+                append(sourceMa, appMa);
+                append(sourceAk, appAk);
+
+                // Memuat data dari mahasiswa beserta mata kuliahnya
+                stat = 1;
+                loadStudentData(&student, sourceMa, &stat);
+                loadCourses(&student, sourceAk);
+                if (stat == 0) {
+                    printf("Press ANY key to continue!");
+                    getch();
+                    system("cls");
+                    break;
+                }
+
+                // Interface oleh Mahasiswa
+                pass = 0;
+                getAccessMahasiswa(student, &pass);
+                if (pass == 1)
+                    mainMenuMahasiswa(student, &size, sourceMa, sourceAk);
+                memset(&student, 0, sizeof(student));
+                break;
+            case 2:
+                // Memuat data dari dosen
+                loadAdvisorData(&advisor, "DatabaseDosen/data_dosen.txt");
+
+                // Interface oleh dosen
+                pass = 0;
+                printf("Nama Dosen : %s\n", advisor.advisorName);
+                getAccessDosen(advisor, &pass);
+                if (pass == 1)
+                    mainMenuDosen(student, advisor, &size);
+                memset(&advisor, 0, sizeof(advisor));
+                break;
+            default:
+                printf("Input tidak valid\n");
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+        }
+    } while (mode != 0);
 	return 0;
+
 }

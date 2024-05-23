@@ -1,0 +1,12 @@
+- kode-kodenya udah gw ubah jadi tiap mode (mahasiswa dan dosen) punya domain masing-masing, buat tracking
+  functions nya bisa liat Prototype.h
+- gw udah nambahin database buat dosen dan mahasiswa, jadi mahasiswa yang bisa ngakses program bisa lebih dari satu
+- gw udah buat error handling buat load data masing2 mode juga
+- data akademik semua mahasiswa masih dibuat sama
+- dosen sekarang bisa milih mau ngemanage mahasiswa yang mana
+- tiap matkul udah punya variabel yang nyatain semester berapanya
+- ada beberapa yang layoutnya gw ubah tapi overall fungsionalitasnya masih sama
+
+problem:
+- pragma omp belom kepake
+- proses ngewrite data ke database masih ngehasilin output yang aneh
