@@ -9,6 +9,7 @@ void hitungRataRata() {
     float totalGPA = 0.0;
     float totalGradePoints = 0.0;
     float totalSemesterGrades[8] = {0.0};
+    float grade [8];
     int totalPassedCredits = 0;
 
     char name[50], npm[50];
@@ -56,13 +57,18 @@ void hitungRataRata() {
         return;
     }
 
-    printf("Rata-rata IPK: %.2f\n", totalGPA / totalMahasiswa);
-    printf("Rata-rata Total Mutu: %.2f\n", totalGradePoints / totalMahasiswa);
+    printf("Rata-rata IPK: %s%.2f\033[0m\n", GREEN, totalGPA / totalMahasiswa);
+    printf("Rata-rata Total Mutu: %s%.2f\033[0m\n", GREEN, totalGradePoints / totalMahasiswa);
+    printf("Jumlah Mahasiswa yang Terdata di Sistem Akademis : %d\n\n",totalMahasiswa);
+    printf("++===============================++\n");
     for (int i = 0; i < 8; i++) {
-        printf("Rata-rata IP Semester %d: %.2f\n", i + 1, totalSemesterGrades[i] / totalMahasiswa);
+    	grade[i]=totalSemesterGrades[i] / totalMahasiswa;
+        printf("|| Rata-rata IP Semester %d: %s%.2f\033[0m ||\n", i + 1, (totalSemesterGrades[i] / totalMahasiswa == 0) ? RED : GREEN, totalSemesterGrades[i] / totalMahasiswa);
     }
-    printHistogram(totalSemesterGrades, MAX_SEMESTERS);
-    printf("Rata-rata SKS Lulus: %.2f\n", (float)totalPassedCredits / totalMahasiswa);
+    printf("++===============================++\n\n");
+    printf("-- GRAFIK IP --\n\n");
+    printHistogram(grade, MAX_SEMESTERS);
+    printf("Rata-rata SKS Lulus: %s%.2f\033[0m\n\n", GREEN, (float)totalPassedCredits / totalMahasiswa);
 }
 
 //MAIN MENU
