@@ -64,7 +64,7 @@ void pilihMahasiswa(AcademicUser user) {
 
         fscanf(file, " %[^\n]", tempName[idx]);
         fscanf(file, "%s", tempNPM);
-        printf("|| %-2d || %-27s || %s  ||\n", idx + 1, tempName[idx], tempNPM);
+        printf("|| %-2d || %-26s || %s  ||\n", idx + 1, tempName[idx], tempNPM);
         idx++;
     }
     printf("++====++============================++=============++\n\n");
