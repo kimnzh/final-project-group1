@@ -302,12 +302,16 @@ void beriNilai(AcademicUser *user) {
     printf("||         BERI NILAI MATAKULIAH MAHASISWA        ||\n");
     printf("++================================================++\n");
     while (currentCourse != NULL) {
-        if (currentCourse->status == 1) {
+        if (currentCourse->status == 1 && currentCourse->score == 0.0) {
             printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
             courseIndex++;
         }
         currentCourse = currentCourse->next;
     }
+    if(courseIndex == 1){
+        printf("Tidak ada matakuliah untuk dinilai saat ini (Semua sudah dinilai sebelumnya)\n");
+        return;
+	}
 
     // Meminta input nilai dari dosen untuk setiap matakuliah
     printf("\nMasukkan nomor matakuliah untuk memberi nilai lengkap: ");
@@ -318,7 +322,7 @@ void beriNilai(AcademicUser *user) {
     currentCourse = user->courses_head;
     int selectedCourseIndex = 0;
     while (currentCourse != NULL) {
-        if (currentCourse->status == 1) {
+        if (currentCourse->status == 1 && currentCourse->score == 0.0) {
             if (selectedCourseIndex == choice) {
                 float floatSkor;
                 printf("\n++================================================++\n");
@@ -399,6 +403,10 @@ void setujuiMatakuliah(AcademicUser *user) {
         }
         currentCourse = currentCourse->next;
     }
+    if(courseIndex == 1){
+        printf("Tidak ada matakuliah untuk disetujui saat ini (mahasiswa belum memilih matakuliah)\n");
+        return;
+	}
 
     // Meminta input dari dosen untuk menyetujui matakuliah
     printf("\nMasukkan nomor matakuliah untuk disetujui: ");
