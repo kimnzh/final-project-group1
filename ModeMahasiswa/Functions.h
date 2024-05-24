@@ -478,10 +478,10 @@ void loadStudentData(AcademicUser *student, const char *filename, int *stat) {
     fscanf(file, "%f", &student->gpa);
     fscanf(file, "%d", &student->tagihan);
     fscanf(file, "%d", &student->semesterSekarang);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         fscanf(file, "%f", &student->semesterGrades[i]);
     }
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         fscanf(file, "%d", &student->jumlahNilai[i]);
     }
     fscanf(file, "%d", &student->totalCourses);
@@ -546,11 +546,11 @@ void writeStudentData(AcademicUser *student, const char *filename) {
     fprintf(file, "%.2f\n", student->gpa);
     fprintf(file, "%d\n", student->tagihan);
     fprintf(file, "%d\n", student->semesterSekarang);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         fprintf(file, "%.2f ", student->semesterGrades[i]);
     }
     fprintf(file,"\n");
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
         fprintf(file, "%d ", student->jumlahNilai[i]);
     }
     fprintf(file,"\n");

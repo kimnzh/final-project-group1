@@ -117,6 +117,8 @@ void pilihMahasiswa(AcademicUser user) {
         printf("||  %s%            -*d\033[0m||   |                                      ||\n", GREEN, 25, user.semesterSekarang); 
         printf("|| Status Akademis           || 5 | Kembali ke menu sebelumnya           ||\n");   
         printf("||  %s%            -*s\033[0m||   |                                      ||\n",(strcmp(user.academicStatus,"Aktif") == 0) ? GREEN : RED, 25, user.academicStatus);
+        printf("|| SKS yang diambil sekarang ||   |                                      ||\n");   
+        printf("||  %s%            -*d\033[0m||   |                                      ||\n",(user.sksSekarang == 0) ? RED : GREEN, 25, user.sksSekarang);
 		printf("|| Status Pembayaran         ||   |                                      ||\n");          
 		printf("||  %s%            -*s\033[0m||   |                                      ||\n", (user.tagihan == 0) ? GREEN : RED, 25, pembayaran, YELLOW);
         printf("++===========================++===+======================================++\n\n");
