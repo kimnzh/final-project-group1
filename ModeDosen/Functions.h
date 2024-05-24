@@ -1,3 +1,70 @@
+void hitungRataRata() {
+    FILE *file = fopen("DatabaseMahasiswa/allData.txt", "r");
+    if (file == NULL) {
+        perror("Failed to open allData file");
+        return;
+    }
+
+    int totalMahasiswa = 0;
+    float totalGPA = 0.0;
+    float totalGradePoints = 0.0;
+    float totalSemesterGrades[8] = {0.0};
+    int totalPassedCredits = 0;
+
+    char name[50], npm[50];
+    
+    // Buffer to store all names and npms to process in parallel
+    char names[100][50];
+    char npms[100][50];
+    int count = 0;
+
+    while (!feof(file)) {
+        fscanf(file, " %[^\n]", names[count]);
+        fscanf(file, "%s", npms[count]);
+        count++;
+    }
+
+    fclose(file);
+
+    #pragma omp parallel for reduction(+:totalGPA, totalGradePoints, totalPassedCredits) reduction(+:totalSemesterGrades[:8]) 
+    for (int i = 0; i < count; i++) {
+        char sourceMa[100] = "DatabaseMahasiswa/data_";
+        char appMa[MAX_APPEND_LENGTH];
+
+        sprintf(appMa, "%s/mahasiswa.txt", names[i]);
+        append(sourceMa, appMa);
+
+        AcademicUser user;
+        int stat = 1;
+        loadStudentData(&user, sourceMa, &stat);
+
+        if (stat) {
+            #pragma omp critical
+            totalMahasiswa++;
+
+            totalGPA += user.gpa;
+            totalGradePoints += user.totalGradePoints;
+            for (int j = 0; j < 8; j++) {
+                totalSemesterGrades[j] += user.semesterGrades[j];
+            }
+            totalPassedCredits += user.totalPassedCredits;
+        }
+    }
+
+    if (totalMahasiswa == 0) {
+        printf("Tidak ada data mahasiswa yang ditemukan.\n");
+        return;
+    }
+
+    printf("Rata-rata IPK: %.2f\n", totalGPA / totalMahasiswa);
+    printf("Rata-rata Total Mutu: %.2f\n", totalGradePoints / totalMahasiswa);
+    for (int i = 0; i < 8; i++) {
+        printf("Rata-rata IP Semester %d: %.2f\n", i + 1, totalSemesterGrades[i] / totalMahasiswa);
+    }
+    printHistogram(totalSemesterGrades, MAX_SEMESTERS);
+    printf("Rata-rata SKS Lulus: %.2f\n", (float)totalPassedCredits / totalMahasiswa);
+}
+
 //MAIN MENU
 void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
 	int opsi = -1;
@@ -8,10 +75,10 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
         printf("||   UNIVERSITAS PROGLAN 2   ||        SISTEM AKADEMIK (DOSEN)        ||\n");
         printf("||                           |+===+===================================++\n");
         printf("|+===========================+| 1 | Manage Mahasiswa Bimbingan        ||\n");
-        printf("|| NIP                       ||   |                                   ||\n");
-        printf("||  %s%            -*s\033[0m|| 0 | Keluar                            ||\n", BLUE, 25, advisor.advisorName);
+        printf("|| NIP                       || 2 | Hitung rata-rata/keseluruhan data ||\n");
+        printf("||  %s%            -*s\033[0m||   | mahasiswa                         ||\n", BLUE, 25, advisor.advisorName);
         printf("|| Nama                      ||   |                                   ||\n");
-        printf("||  %s%            -*s\033[0m||   |                                   ||\n", CYAN, 25, advisor.advisorNumber);
+        printf("||  %s%            -*s\033[0m|| 0 | Keluar                            ||\n", CYAN, 25, advisor.advisorNumber);
         printf("++===========================++===+===================================++\n\n");
 
         printf("Pilihan: ");
@@ -28,6 +95,13 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
             case 1:
                 system("cls");
                 pilihMahasiswa(user);
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+                break;
+           case 2: 
+                system("cls");
+                hitungRataRata();
                 printf("Press ANY key to continue!");
                 getch();
                 system("cls");

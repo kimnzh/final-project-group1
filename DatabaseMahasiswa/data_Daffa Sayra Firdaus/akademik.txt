@@ -108,3 +108,47 @@ Profesionalisme dan Etika dalam Teknologi Informasi
 2
 B
 1
+CS105
+Pemrograman Berorientasi Objek
+3
+80.00
+80.00
+80.00
+80.00
+80.00
+3
+B+
+1
+CS103
+Pemrograman Lanjut
+2
+81.00
+81.00
+80.00
+81.00
+80.75
+3
+A-
+1
+ECE103
+Dasar Rangkaian Elektronika
+3
+40.00
+0.00
+20.00
+0.00
+15.00
+2
+E
+1
+CS112
+Cybersecurity
+5
+50.00
+80.00
+40.00
+90.00
+65.00
+3
+C+
+1

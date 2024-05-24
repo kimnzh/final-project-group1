@@ -85,7 +85,7 @@ Aljabar Linier Lanjut
 0.00
 2
 0
-1
+0
 STT101
 Statistika
 3

@@ -343,16 +343,16 @@ void showGrades(AcademicUser user) {
 void searchCourse(char searchTerm []) {
     int found = 0;
     printf("++============================================================================++\n");
-    printf("|| No | Kode MK |          Nama Mata Kuliah          | SKS | Status           ||\n");
+    printf("|| No | Kode MK |          Nama Mata Kuliah          | SKS | Semester         ||\n");
     printf("++============================================================================++\n");
 
     for (int i = 0; i < sizeof(availableCourses) / sizeof(availableCourses[0]); ++i) {
         // Menggunakan strstr untuk mencari kata kunci tanpa memperhatikan case sensitive
         if (strstr(availableCourses[i].courseCode, searchTerm) != NULL || 
             strstr(availableCourses[i].courseName, searchTerm) != NULL) {
-            printf("|| %-2d | %-7s | %-34s | %-3d | %-1s ||\n", i + 1, availableCourses[i].courseCode, 
+            printf("|| %-2d | %-7s | %-34s | %-3d | %-16d ||\n", i + 1, availableCourses[i].courseCode, 
                    availableCourses[i].courseName, availableCourses[i].credits, 
-                   availableCourses[i].status == 0 ? "Belum disetujui" : "Sudah disetujui");
+                   availableCourses[i].semester);
             found = 1;
         }
     }
@@ -598,11 +598,11 @@ Course* createCourseNode() {
     return newCourse;
 }
 
-void printHistogram(float *grade, int size) {
+void printHistogram(float grade[], int size) {
     int data[size];
 
     // Parallelize the loop to round the grades
-    #pragma omp parallel for
+    
     for (int i = 0; i < size; ++i) {
         data[i] = round(grade[i]);
     }
@@ -629,7 +629,6 @@ void printHistogram(float *grade, int size) {
             MAX = allcounts[index];
         }
     }
-
     // Printing histogram (cannot be parallelized due to I/O operations)
     for (yaxis = MAX; yaxis >= 0.1; yaxis--) { // yaxis for histogram
         printf("%8d%c", yaxis, b);
