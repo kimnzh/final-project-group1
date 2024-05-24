@@ -1,6 +1,6 @@
-tian123
-2306160813
-Christian Hadiwijaya
+salim123
+2306210972
+Salim
 2023
 Teknik Komputer, S1 Reg.
 Prof. Hakim Nizami
@@ -12,7 +12,7 @@ Aktif
 10000000
 2
 3.71 0.00 0.00 0.00 0.00 0.00 0.00 0.00 
-5 2 0 0 0 0 0 0 0 0
+5 2 0 0 0 0 0 0 
 7
 70
 0

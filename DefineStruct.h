@@ -44,10 +44,12 @@ typedef struct {
 
     int semesterSekarang;
     float semesterGrades[8]; 
-    int jumlahNilai[8];
+    int jumlahNilai[10];
 
     int totalCourses;
 	int maximumCourses;
+	int sksSekarang;
+	int totalCredits;
 
 	Course *courses_head;  
 } AcademicUser;

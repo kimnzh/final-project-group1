@@ -70,21 +70,12 @@ int main(){
         printf("Pilih akun yang ingin digunakan : \n");
         printf("1. Mahasiswa\n");
         printf("2. Dosen\n");
-        printf("0. Exit\n\n");
+        printf("3. Exit\n\n");
         printf("Pilihan : ");
 
-        scanf(" %[^\n]", modeString);
-        if (strcmp(modeString, "0") != 0)
-            strcpy(modeString, "-1");
+        scanf(" %[^\n]", &modeString);
         mode = atoi(modeString);
-
         switch (mode) {
-            case 0:
-                printf("Berhasil keluar program\n\n");
-                printf("Press ANY key to continue!");
-                getch();
-                system("cls");
-                break;
             case 1:
                 printf("Nama : ");
                 scanf(" %[^\n]", namaMahasiswa);
@@ -125,13 +116,19 @@ int main(){
                     mainMenuDosen(student, advisor, &size);
                 memset(&advisor, 0, sizeof(advisor));
                 break;
+            case 3:
+                printf("Berhasil keluar program\n\n");
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+                break;
             default:
                 printf("Input tidak valid\n");
                 printf("Press ANY key to continue!");
                 getch();
                 system("cls");
         }
-    } while (mode != 0);
+    } while (mode != 3);
 	return 0;
 
 }

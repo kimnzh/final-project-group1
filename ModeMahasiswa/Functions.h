@@ -21,7 +21,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		printf("||  %s%            -*s\033[0m|| 3 | Tampilkan pilihan mata kuliah                         ||\n", CYAN, 25, user.npm);
 		printf("||===========================||   |                                                       ||\n");
 		printf("|| Nama                      || 4 | Tampilkan nilai mata kuliah                           ||\n");
-		printf("||  %s%            -*s\033[0m|| 5 | Lihat/cari mata kuliah yang tersedia di  semester ini ||\n", BLUE, 25, user.name);
+		printf("||  %s%            -*s\033[0m|| 5 | Lihat/cari mata kuliah yang tersedia                  ||\n", BLUE, 25, user.name);
 		printf("|| Angkatan                  ||   |                                                       ||\n");
 		printf("||  %s%            -*d\033[0m|| 6 | Lihat tagihan UKT semester ini                        ||\n", MAGENTA, 25, user.batch);
 		printf("|| Program Studi             ||   |                                                       ||\n");
@@ -29,8 +29,8 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		printf("|| Pembimbing Akademis       ||   |                                                       ||\n");
 		printf("||  %s%            -*s\033[0m|| 8 | Update profil mahasiswa                               ||\n", BLUE, 25, user.advisorName);
 		printf("||  %s%            -*s\033[0m||   |                                                       ||\n", CYAN, 25, user.advisorNumber);
-		printf("|| Status Akademis           || 0 | Keluar                                                ||\n");
-		printf("||  %s%            -*s\033[0m||===+=======================================================++\n", GREEN, 25, user.academicStatus);
+		printf("|| Status Akademis           || 9 | Keluar                                                ||\n");
+		printf("||  %s%            -*s\033[0m||===+=======================================================++\n",(strcmp(user.academicStatus,"Aktif") == 0) ? GREEN : RED, 25, user.academicStatus);
 		printf("|| Total SKS Lulus           ||%s  ____  _       _      _   ___                             \033[0m||\n", YELLOW);
 		printf("||  %s%            -*d\033[0m||%s / ___|(_) __ _| | __ / | / _ \\                            \033[0m||\n", GREEN, 25, user.totalPassedCredits, YELLOW);
 		printf("|| Total Mutu                ||%s \\___ \\| |/ _` | |/ / | || | | |                           \033[0m||\n", YELLOW);
@@ -38,7 +38,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		printf("|| IPK                       ||%s |____/|_|\\__,_|_|\\_\\ |_(_)___/                            \033[0m||\n", YELLOW);
 		printf("||  %s%          -*.2f\033[0m||%s / ___|  ___  __| | ___ _ __| |__   __ _ _ __   __ _       \033[0m||\n", GREEN, 25, user.gpa, YELLOW);
 		printf("|| SKS Diperoleh             ||%s \\___ \\ / _ \\/ _` |/ _ \\ '__| '_ \\ / _` | '_ \\ / _` |      \033[0m||\n", YELLOW);
-		printf("||  %s%            -*d\033[0m||%s  ___) |  __/ (_| |  __/ |  | | | | (_| | | | | (_| |      \033[0m||\n", GREEN, 25, user.totalPassedCredits, YELLOW);
+		printf("||  %s%            -*d\033[0m||%s  ___) |  __/ (_| |  __/ |  | | | | (_| | | | | (_| |      \033[0m||\n", GREEN, 25, user.totalCredits, YELLOW);
 		printf("|| Status Pembayaran         ||%s |____/ \\___|\\__,_|\\___|_|  |_| |_|\\__,_|_| |_|\\__,_|      \033[0m||\n", YELLOW);
 		printf("||  %s%            -*s\033[0m||                                                           ||\n", (user.tagihan == 0) ? GREEN : RED, 25, pembayaran, YELLOW);
 		printf("++===========================++===========================================================++\n");
@@ -47,19 +47,9 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		printHistogram(user.semesterGrades, user.semesterSekarang);
 		printf("Pilihan: ");
 		scanf(" %[^\n]", opsiString);
-        if (strcmp(opsiString, "0") != 0)
-            strcpy(opsiString, "-1");
 		opsi = atoi(opsiString);
 
 		switch(opsi) {
-			case 0:
-				system("cls");
-				printf("Kembali ke beranda...\n\n");
-				writeStudentData(&user, sourceMa);
-				writeCourses(&user, sourceAk);
-				printf("Press ANY key to continue!");
-				getch();
-				break;
 			case 1:
 				system("cls");
 				addCourse(&user);
@@ -118,13 +108,21 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 				getch();
 				system("cls");
 				break;
+			case 9:
+				system("cls");
+				printf("Kembali ke beranda...\n\n");
+				writeStudentData(&user, sourceMa);
+				writeCourses(&user, sourceAk);
+				printf("Press ANY key to continue!");
+				getch();
+				break;
 			default:
 				printf("Input tidak valid\n");
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 		}
-	} while (opsi != 0);
+	} while (opsi != 9);
 }
 
 //OPTIONS
@@ -238,7 +236,7 @@ void deleteCourse(AcademicUser *user) {
     scanf("%d", &choice);
     choice--; // To match array index (0-based)
 
-    if (choice >= 0 && choice < user->totalCourses) {
+    if (choice >= 0) {
         // Find the course to delete
         Course *prevCourse = NULL;
         currentCourse = user->courses_head;
@@ -269,12 +267,12 @@ void deleteCourse(AcademicUser *user) {
 
 // CASE 4
 void showGrades(AcademicUser user) {
-    const char* nilaiString[] = {"A", "B+", "B", "C+", "C", "D+", "D", "E"};
-    int jumlahNilai[8] = {0};  // Initialize count of each grade to 0
+    const char* nilaiString[] = {"A","A-","B+", "B","B-","C+", "C", "D+", "D", "E"};
+    int jumlahNilai[10] = {0};  // Initialize count of each grade to 0
     // Print the list of graded courses
     Course *currentCourse = user.courses_head;
     while (currentCourse != NULL) {
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 10; j++) {
             if (strcmp(currentCourse->grade, nilaiString[j]) == 0) {
                 jumlahNilai[j]++;
                 break;
@@ -287,7 +285,7 @@ void showGrades(AcademicUser user) {
     printf("||===========================||\n");
     printf("|| Nilai            Jumlah   ||\n");
     int cekNilai = 0;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         if (jumlahNilai[i] != 0) {
             cekNilai++;
             printf("|| %-15s    %-5d  ||\n", nilaiString[i], jumlahNilai[i]);
@@ -324,11 +322,12 @@ void showGrades(AcademicUser user) {
                 printf("++================================================++\n");
                 printf("|| Nama Matakuliah   : %-26s ||\n", currentCourse->courseName);
                 printf("|| Kode Matakuliah   : %-26s ||\n", currentCourse->courseCode);
-                printf("|| Nilai Total       : %-26s ||\n", currentCourse->grade);
                 printf("|| Nilai Kuis        : %-26.2f ||\n", currentCourse->kuis);
                 printf("|| Nilai UAS         : %-26.2f ||\n", currentCourse->uas);
                 printf("|| Nilai UTS         : %-26.2f ||\n", currentCourse->uts);
                 printf("|| Nilai Tugas       : %-26.2f ||\n", currentCourse->tugas);
+                printf("|| Nilai Huruf       : %-26s ||\n", currentCourse->grade);
+                printf("|| Nilai Rata-rata   : %-26.2f ||\n", currentCourse->score);
                 printf("++================================================++\n\n");
                 return;
             }
@@ -479,14 +478,16 @@ void loadStudentData(AcademicUser *student, const char *filename, int *stat) {
     fscanf(file, "%f", &student->gpa);
     fscanf(file, "%d", &student->tagihan);
     fscanf(file, "%d", &student->semesterSekarang);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         fscanf(file, "%f", &student->semesterGrades[i]);
     }
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         fscanf(file, "%d", &student->jumlahNilai[i]);
     }
     fscanf(file, "%d", &student->totalCourses);
     fscanf(file, "%d", &student->maximumCourses);
+    fscanf(file, "%d", &student->sksSekarang);
+    fscanf(file, "%d", &student->totalCredits);
     
     fclose(file);
 }
@@ -545,16 +546,18 @@ void writeStudentData(AcademicUser *student, const char *filename) {
     fprintf(file, "%.2f\n", student->gpa);
     fprintf(file, "%d\n", student->tagihan);
     fprintf(file, "%d\n", student->semesterSekarang);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         fprintf(file, "%.2f ", student->semesterGrades[i]);
     }
     fprintf(file,"\n");
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         fprintf(file, "%d ", student->jumlahNilai[i]);
     }
     fprintf(file,"\n");
     fprintf(file, "%d\n", student->totalCourses);
     fprintf(file, "%d\n", student->maximumCourses);
+    fprintf(file, "%d\n", student->sksSekarang);
+    fprintf(file, "%d\n", student->totalCredits);
 
     fclose(file);
 }
@@ -578,8 +581,11 @@ void writeCourses(AcademicUser *student, const char *filename) {
         fprintf(file, "%.2f\n", currentCourse->score);
         fprintf(file, "%d\n", currentCourse->credits);
         fprintf(file, "%s\n", currentCourse->grade);
-        fprintf(file, "%d\n", currentCourse->status);
+        fprintf(file, "%d", currentCourse->status);
         currentCourse = currentCourse->next;
+        if (currentCourse != NULL) {
+            fprintf(file, "\n");  // Add newline only if there's another course, supaya saat read tidak NULL.
+        }
     }
 	
     fclose(file);
@@ -593,10 +599,14 @@ Course* createCourseNode() {
 }
 
 void printHistogram(float *grade, int size) {
-	int data[size];
-	for (int i = 0; i < size; ++i) {
+    int data[size];
+
+    // Parallelize the loop to round the grades
+    #pragma omp parallel for
+    for (int i = 0; i < size; ++i) {
         data[i] = round(grade[i]);
     }
+
     int MAX = 0; // initialize and declare variables
     int allcounts[MAX_SEMESTERS] = {0}; // store an array of integers
     int yaxis, xaxis = 0;
@@ -605,17 +615,22 @@ void printHistogram(float *grade, int size) {
     char c = 178;
     char b = 179, y = 192, z = 196;
 
+    // Parallelize the loop to copy data to allcounts
+    #pragma omp parallel for
     for (int i = 0; i < size; i++) {
         allcounts[i] = data[i];
     }
 
     // Determine max occurring number
-    do {
+    // Use reduction to find the maximum value in parallel
+    #pragma omp parallel for reduction(max:MAX)
+    for (index = 0; index < size; ++index) {
         if (allcounts[index] >= MAX) {
             MAX = allcounts[index];
         }
-        index++;
-    } while (index < size);
+    }
+
+    // Printing histogram (cannot be parallelized due to I/O operations)
     for (yaxis = MAX; yaxis >= 0.1; yaxis--) { // yaxis for histogram
         printf("%8d%c", yaxis, b);
 
