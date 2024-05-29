@@ -23,7 +23,7 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 - Menentukan jika mahasiswa lulus atau tidak
 - Menampilkan bagan nilai mahasiswa (tampilan secara kasar)
 - Multithreading digunakan untuk menjalankan hitungan program pada jumlah data yang sangat besar untuk meningkatkan efisiensi 
-  (>50.000 data, untuk proyek akhir ini data yang diberikan hanya sedikit demi menghemat waktu dan size file yang tidak terlalu besar)
+(>50.000 data, untuk proyek akhir ini data yang diberikan hanya sedikit demi menghemat waktu dan size file yang tidak terlalu besar)
 
 2. Mode Mahasiswa
 - Memilih matakuliah/kelas yang dipelajari untuk satu semester
@@ -39,6 +39,7 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 #include <time.h>
 #include <omp.h>
 #include <math.h>
+#include <direct.h>
 
 #define RED "\033[1;31m" //Red
 #define YELLOW "\033[1;33m" //Yellow
@@ -51,11 +52,12 @@ Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading ind
 #include "Prototype.h"
 #include "StringManipule.h"
 
+#include "ModeAdmin/Functions.h"
 #include "ModeDosen/Functions.h"
 #include "ModeMahasiswa/Functions.h"
 
 int main(){
-    char appMa[MAX_APPEND_LENGTH], appAk[MAX_APPEND_LENGTH];
+    char appMa[MAX_APPEND_LENGTH], appAk[MAX_APPEND_LENGTH], appDo[MAX_APPEND_LENGTH];
     char namaMahasiswa[50], namaDosen[50];
     AcademicUser student = {0};
     Dosen advisor = {0};
@@ -65,12 +67,16 @@ int main(){
     int mode = -1;
 	char modeString[10];
 	do {
-        char sourceMa[100] = "DatabaseMahasiswa/data_", sourceAk[100] = "DatabaseMahasiswa/data_";
+        char sourceMa[100] = "Database/DatabaseMahasiswa/data_";
+        char sourceAk[100] = "Database/DatabaseMahasiswa/data_";
+        char sourceDo[100] = "Database/DatabaseDosen/data_dosen_";
         system("cls");
         printf("Pilih akun yang ingin digunakan : \n");
         printf("1. Mahasiswa\n");
         printf("2. Dosen\n");
         printf("3. Exit\n\n");
+        printf("4. Tambah Akun Mahasiswa\n");
+        printf("5. Tambah Akun Dosen\n\n");
         printf("Pilihan : ");
 
         scanf(" %[^\n]", &modeString);
@@ -105,12 +111,25 @@ int main(){
                 memset(&student, 0, sizeof(student));
                 break;
             case 2:
+                printf("Nama : ");
+                scanf(" %[^\n]", namaDosen);
+
+                // Menyiapkan source dari database
+                append(sourceDo, namaDosen);
+                append(sourceDo, ".txt");
+
                 // Memuat data dari dosen
-                loadAdvisorData(&advisor, "DatabaseDosen/data_dosen.txt");
+                stat = 1;
+                loadAdvisorData(&advisor, sourceDo, &stat);
+                if (stat == 0) {
+                    printf("Press ANY key to continue!");
+                    getch();
+                    system("cls");
+                    break;
+                }
 
                 // Interface oleh dosen
                 pass = 0;
-                printf("Nama Dosen : %s\n", advisor.advisorName);
                 getAccessDosen(advisor, &pass);
                 if (pass == 1)
                     mainMenuDosen(student, advisor, &size);
@@ -118,6 +137,18 @@ int main(){
                 break;
             case 3:
                 printf("Berhasil keluar program\n\n");
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+                break;
+            case 4:
+                tambahDataMahasiswa();
+                printf("Press ANY key to continue!");
+                getch();
+                system("cls");
+                break;
+            case 5:
+                tambahDataDosen();
                 printf("Press ANY key to continue!");
                 getch();
                 system("cls");

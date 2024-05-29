@@ -62,7 +62,7 @@ void hitungRataRata() {
     printf("Jumlah Mahasiswa yang Terdata di Sistem Akademis : %d\n\n",totalMahasiswa);
     printf("++===============================++\n");
     for (int i = 0; i < 8; i++) {
-    	grade[i]=totalSemesterGrades[i] / totalMahasiswa;
+        grade[i]=totalSemesterGrades[i] / totalMahasiswa;
         printf("|| Rata-rata IP Semester %d: %s%.2f\033[0m ||\n", i + 1, (totalSemesterGrades[i] / totalMahasiswa == 0) ? RED : GREEN, totalSemesterGrades[i] / totalMahasiswa);
     }
     printf("++===============================++\n\n");
@@ -77,15 +77,15 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
 	char opsiString[10];
 
 	do {
-        printf("++===========================++=======================================++\n");
-        printf("||   UNIVERSITAS PROGLAN 2   ||        SISTEM AKADEMIK (DOSEN)        ||\n");
-        printf("||                           |+===+===================================++\n");
-        printf("|+===========================+| 1 | Manage Mahasiswa Bimbingan        ||\n");
-        printf("|| NIP                       || 2 | Hitung rata-rata/keseluruhan data ||\n");
-        printf("||  %s%            -*s\033[0m||   | mahasiswa                         ||\n", BLUE, 25, advisor.advisorName);
-        printf("|| Nama                      ||   |                                   ||\n");
-        printf("||  %s%            -*s\033[0m|| 0 | Keluar                            ||\n", CYAN, 25, advisor.advisorNumber);
-        printf("++===========================++===+===================================++\n\n");
+        printf("++=====================================++=======================================++\n");
+        printf("||        UNIVERSITAS PROGLAN 2        ||        SISTEM AKADEMIK (DOSEN)        ||\n");
+        printf("||                                     |+===+===================================++\n");
+        printf("|+=====================================+| 1 | Manage Mahasiswa Bimbingan        ||\n");
+        printf("|| NIP                                 || 2 | Hitung rata-rata/keseluruhan data ||\n");
+        printf("||  %s%                      -*s\033[0m||   | mahasiswa                         ||\n", BLUE, 35, advisor.advisorName);
+        printf("|| Nama                                ||   |                                   ||\n");
+        printf("||  %s%                      -*s\033[0m|| 0 | Keluar                            ||\n", CYAN, 35, advisor.advisorNumber);
+        printf("++=====================================++===+===================================++\n\n");
 
         printf("Pilihan: ");
         scanf(" %[^\n]", opsiString);
@@ -100,12 +100,12 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
                 break;
             case 1:
                 system("cls");
-                pilihMahasiswa(user);
+                pilihMahasiswa(user, advisor);
                 printf("Press ANY key to continue!");
                 getch();
                 system("cls");
                 break;
-           case 2: 
+            case 2: 
                 system("cls");
                 hitungRataRata();
                 printf("Press ANY key to continue!");
@@ -123,16 +123,24 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
 
 //OPTIONS
 // CASE 1
-void pilihMahasiswa(AcademicUser user) {
-    char sourceMa[100] = "DatabaseMahasiswa/data_", sourceAk[100] = "DatabaseMahasiswa/data_";
+void pilihMahasiswa(AcademicUser user, Dosen dosen) {
+    char sourceMa[100] = "Database/DatabaseMahasiswa/data_", sourceAk[100] = "Database/DatabaseMahasiswa/data_";
+    char sourceDo[100] = "Database/DatabaseDosen/data_dosen_", appDo[50], buff[50];
     char appMa[MAX_APPEND_LENGTH], appAk[MAX_APPEND_LENGTH];
 
-    FILE *file = fopen("DatabaseMahasiswa/allData.txt", "r");
+    strcpy(appDo, dosen.advisorName);
+    append(appDo, ".txt");
+    append(sourceDo, appDo);
 
+    FILE *file = fopen(sourceDo, "r");
 
     char **tempName = NULL; // Start with no allocated memory
     char tempNPM[50];
     int idx = 0, choice, stat = 1; // idx for printing student number, choice for storing the selected number
+
+    fscanf(file, " %[^\n]", buff);
+    fscanf(file, " %[^\n]", buff);
+    fscanf(file, " %[^\n]", buff);
 
     printf("++====++============================++=============++\n");
     printf("|| NO ||  NAMA MAHASISWA BIMBINGAN  ||     NPM     ||\n");
@@ -158,14 +166,14 @@ void pilihMahasiswa(AcademicUser user) {
 
     // Menyiapkan source dari database
     sprintf(appMa, "%s/mahasiswa.txt", tempName[choice - 1]);
-    sprintf(appAk, "%s/akademik.txt", tempName[choice - 1]); 
+    sprintf(appAk, "%s/akademik.txt", tempName[choice - 1]);
     append(sourceMa, appMa);
     append(sourceAk, appAk);
 
     // Memuat data dari mahasiswa beserta mata kuliahnya
     loadStudentData(&user, sourceMa, &stat);
     loadCourses(&user, sourceAk);
-    
+
     #pragma omp parallel for
     for (int i = 0; i < idx; i++) {
         free(tempName[i]);
@@ -174,12 +182,11 @@ void pilihMahasiswa(AcademicUser user) {
     // Interface untuk opsi pada mahasiswa
     int opsi = -1;
 	char opsiString[10];
-	char pembayaran [15];
+	char pembayaran[15];
     do {
 		if(user.tagihan == 0){
 			strcpy(pembayaran, "LUNAS");
-		}
-		else{
+		} else {
 			strcpy(pembayaran, "BELUM LUNAS");
 		}
         system("cls");
@@ -192,14 +199,14 @@ void pilihMahasiswa(AcademicUser user) {
         printf("|| NPM                       || 3 | Nyatakan Lulus untuk semester ini    ||\n");
         printf("||  %s%            -*s\033[0m||   | (mahasiswa akan lanjut ke semester   ||\n", MAGENTA, 25, user.npm);
         printf("|| IP Semester Sebelumnya    ||   | berikutnya)                          ||\n", MAGENTA, 25, user.npm);
-        printf("||  %s%          -*.2f\033[0m||   |                                      ||\n", GREEN, 25, user.semesterGrades[user.semesterSekarang-2]); 
+        printf("||  %s%          -*.2f\033[0m||   |                                      ||\n", GREEN, 25, user.semesterGrades[user.semesterSekarang-2]);
         printf("|| Semester Sekarang         || 4 | Konfirmasi status akademis mahasiswa ||\n", MAGENTA, 25, user.npm);
-        printf("||  %s%            -*d\033[0m||   |                                      ||\n", GREEN, 25, user.semesterSekarang); 
-        printf("|| Status Akademis           || 5 | Kembali ke menu sebelumnya           ||\n");   
-        printf("||  %s%            -*s\033[0m||   |                                      ||\n",(strcmp(user.academicStatus,"Aktif") == 0) ? GREEN : RED, 25, user.academicStatus);
-        printf("|| SKS yang diambil sekarang ||   |                                      ||\n");   
-        printf("||  %s%            -*d\033[0m||   |                                      ||\n",(user.sksSekarang == 0) ? RED : GREEN, 25, user.sksSekarang);
-		printf("|| Status Pembayaran         ||   |                                      ||\n");          
+        printf("||  %s%            -*d\033[0m||   |                                      ||\n", GREEN, 25, user.semesterSekarang);
+        printf("|| Status Akademis           || 5 | Kembali ke menu sebelumnya           ||\n");
+        printf("||  %s%            -*s\033[0m||   |                                      ||\n", (strcmp(user.academicStatus, "Aktif") == 0) ? GREEN : RED, 25, user.academicStatus);
+        printf("|| SKS yang diambil sekarang ||   |                                      ||\n");
+        printf("||  %s%            -*d\033[0m||   |                                      ||\n", (user.sksSekarang == 0) ? RED : GREEN, 25, user.sksSekarang);
+		printf("|| Status Pembayaran         ||   |                                      ||\n");
 		printf("||  %s%            -*s\033[0m||   |                                      ||\n", (user.tagihan == 0) ? GREEN : RED, 25, pembayaran, YELLOW);
         printf("++===========================++===+======================================++\n\n");
 
@@ -226,7 +233,7 @@ void pilihMahasiswa(AcademicUser user) {
                 system("cls");
                 user.semesterSekarang++;
                 user.sksSekarang = 0;
-                user.tagihan+=1000000;
+                user.tagihan += 1000000;
                 printf("Mahasiswa telah lulus ke semester berikutnya.\n");
                 printf("Semester sekarang: %d\n", user.semesterSekarang);
                 printf("Press ANY key to continue!");
@@ -302,16 +309,12 @@ void beriNilai(AcademicUser *user) {
     printf("||         BERI NILAI MATAKULIAH MAHASISWA        ||\n");
     printf("++================================================++\n");
     while (currentCourse != NULL) {
-        if (currentCourse->status == 1 && currentCourse->score == 0.0) {
+        if (currentCourse->status == 1) {
             printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
             courseIndex++;
         }
         currentCourse = currentCourse->next;
     }
-    if(courseIndex == 1){
-        printf("Tidak ada matakuliah untuk dinilai saat ini (Semua sudah dinilai sebelumnya)\n");
-        return;
-	}
 
     // Meminta input nilai dari dosen untuk setiap matakuliah
     printf("\nMasukkan nomor matakuliah untuk memberi nilai lengkap: ");
@@ -322,7 +325,7 @@ void beriNilai(AcademicUser *user) {
     currentCourse = user->courses_head;
     int selectedCourseIndex = 0;
     while (currentCourse != NULL) {
-        if (currentCourse->status == 1 && currentCourse->score == 0.0) {
+        if (currentCourse->status == 1) {
             if (selectedCourseIndex == choice) {
                 float floatSkor;
                 printf("\n++================================================++\n");
@@ -398,15 +401,11 @@ void setujuiMatakuliah(AcademicUser *user) {
     printf("++===================================================================++\n");
     while (currentCourse != NULL) {
         if (currentCourse->status == 0) {
-            printf("%d. %-25s (%s) (Matakuliah semester %d)  \n", courseIndex, currentCourse->courseName, currentCourse->courseCode,currentCourse->semester);
+            printf("%-2d. %-52s (%s) (Matakuliah semester %d)  \n", courseIndex, currentCourse->courseName, currentCourse->courseCode,currentCourse->semester);
             courseIndex++;
         }
         currentCourse = currentCourse->next;
     }
-    if(courseIndex == 1){
-        printf("Tidak ada matakuliah untuk disetujui saat ini (mahasiswa belum memilih matakuliah)\n");
-        return;
-	}
 
     // Meminta input dari dosen untuk menyetujui matakuliah
     printf("\nMasukkan nomor matakuliah untuk disetujui: ");
@@ -433,11 +432,12 @@ void setujuiMatakuliah(AcademicUser *user) {
 }
 
 //FILE HANDLING
-void loadAdvisorData(Dosen *advisor, const char *filename) {
+void loadAdvisorData(Dosen *advisor, const char *filename, int *stat) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        perror("Failed to open advisor data file");
-        exit(EXIT_FAILURE);
+        perror("Nama dosen tidak ditemukan");
+        *stat = 0;
+        return;
     }
     
     fscanf(file, "%s", advisor->advisorNumber);

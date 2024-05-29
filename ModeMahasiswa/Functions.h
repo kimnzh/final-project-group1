@@ -7,41 +7,40 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 	char pembayaran [15];
 
 	do {
-		if(user.tagihan == 0){
+		if (user.tagihan == 0){
 			strcpy(pembayaran, "LUNAS");
-		}
-		else{
+		} else {
 			strcpy(pembayaran, "BELUM LUNAS");
 		}
-		printf("++===========================++===========================================================++\n");
-		printf("||   UNIVERSITAS PROGLAN 2   ||              SISTEM AKADEMIK MAHASISWA                    ||\n");
-		printf("||                           |+===+=======================================================||\n");
-		printf("|+===========================+| 1 | Tambahkan pilihan mata kuliah                         ||\n");
-		printf("|| NPM                       || 2 | Batalkan pilihan mata kuliah                          ||\n");
-		printf("||  %s%            -*s\033[0m|| 3 | Tampilkan pilihan mata kuliah                         ||\n", CYAN, 25, user.npm);
-		printf("||===========================||   |                                                       ||\n");
-		printf("|| Nama                      || 4 | Tampilkan nilai mata kuliah                           ||\n");
-		printf("||  %s%            -*s\033[0m|| 5 | Lihat/cari mata kuliah yang tersedia                  ||\n", BLUE, 25, user.name);
-		printf("|| Angkatan                  ||   |                                                       ||\n");
-		printf("||  %s%            -*d\033[0m|| 6 | Lihat tagihan UKT semester ini                        ||\n", MAGENTA, 25, user.batch);
-		printf("|| Program Studi             ||   |                                                       ||\n");
-		printf("||  %s%            -*s\033[0m|| 7 | Panduan Penggunaan Program                            ||\n", CYAN, 25, user.major);
-		printf("|| Pembimbing Akademis       ||   |                                                       ||\n");
-		printf("||  %s%            -*s\033[0m|| 8 | Update profil mahasiswa                               ||\n", BLUE, 25, user.advisorName);
-		printf("||  %s%            -*s\033[0m||   |                                                       ||\n", CYAN, 25, user.advisorNumber);
-		printf("|| Status Akademis           || 9 | Keluar                                                ||\n");
-		printf("||  %s%            -*s\033[0m||===+=======================================================++\n",(strcmp(user.academicStatus,"Aktif") == 0) ? GREEN : RED, 25, user.academicStatus);
-		printf("|| Total SKS Lulus           ||%s  ____  _       _      _   ___                             \033[0m||\n", YELLOW);
-		printf("||  %s%            -*d\033[0m||%s / ___|(_) __ _| | __ / | / _ \\                            \033[0m||\n", GREEN, 25, user.totalPassedCredits, YELLOW);
-		printf("|| Total Mutu                ||%s \\___ \\| |/ _` | |/ / | || | | |                           \033[0m||\n", YELLOW);
-		printf("||  %s%          -*.2f\033[0m||%s  ___) | | (_| |   <  | || |_| |                           \033[0m||\n", GREEN, 25, user.totalGradePoints, YELLOW);
-		printf("|| IPK                       ||%s |____/|_|\\__,_|_|\\_\\ |_(_)___/                            \033[0m||\n", YELLOW);
-		printf("||  %s%          -*.2f\033[0m||%s / ___|  ___  __| | ___ _ __| |__   __ _ _ __   __ _       \033[0m||\n", GREEN, 25, user.gpa, YELLOW);
-		printf("|| SKS Diperoleh             ||%s \\___ \\ / _ \\/ _` |/ _ \\ '__| '_ \\ / _` | '_ \\ / _` |      \033[0m||\n", YELLOW);
-		printf("||  %s%            -*d\033[0m||%s  ___) |  __/ (_| |  __/ |  | | | | (_| | | | | (_| |      \033[0m||\n", GREEN, 25, user.totalCredits, YELLOW);
-		printf("|| Status Pembayaran         ||%s |____/ \\___|\\__,_|\\___|_|  |_| |_|\\__,_|_| |_|\\__,_|      \033[0m||\n", YELLOW);
-		printf("||  %s%            -*s\033[0m||                                                           ||\n", (user.tagihan == 0) ? GREEN : RED, 25, pembayaran, YELLOW);
-		printf("++===========================++===========================================================++\n");
+		printf("++=========================================++===========================================================++\n");
+		printf("||          UNIVERSITAS PROGLAN 2          ||              SISTEM AKADEMIK MAHASISWA                    ||\n");
+		printf("||                                         |+===+=======================================================||\n");
+		printf("|+=========================================+| 1 | Tambahkan pilihan mata kuliah                         ||\n");
+		printf("|| NPM                                     || 2 | Batalkan pilihan mata kuliah                          ||\n");
+		printf("||  %s%                          -*s\033[0m|| 3 | Tampilkan pilihan mata kuliah                         ||\n", CYAN, 39, user.npm);
+		printf("||=========================================||   |                                                       ||\n");
+		printf("|| Nama                                    || 4 | Tampilkan nilai mata kuliah                           ||\n");
+		printf("||  %s%                          -*s\033[0m|| 5 | Lihat/cari mata kuliah yang tersedia                  ||\n", BLUE, 39, user.name);
+		printf("|| Angkatan                                ||   |                                                       ||\n");
+		printf("||  %s%                          -*d\033[0m|| 6 | Lihat tagihan UKT semester ini                        ||\n", MAGENTA, 39, user.batch);
+		printf("|| Program Studi                           ||   |                                                       ||\n");
+		printf("||  %s%                          -*s\033[0m|| 7 | Panduan Penggunaan Program                            ||\n", CYAN, 39, user.major);
+		printf("|| Pembimbing Akademis                     ||   |                                                       ||\n");
+		printf("||  %s%                          -*s\033[0m|| 8 | Update profil mahasiswa                               ||\n", BLUE, 39, user.advisorName);
+		printf("||  %s%                          -*s\033[0m||   |                                                       ||\n", CYAN, 39, user.advisorNumber);
+		printf("|| Status Akademis                         || 9 | Keluar                                                ||\n");
+		printf("||  %s%                          -*s\033[0m||===+=======================================================++\n", (strcmp(user.academicStatus, "Aktif") == 0) ? GREEN : RED, 39, user.academicStatus);
+		printf("|| Total SKS Lulus                         ||%s  ____  _       _      _   ___                             \033[0m||\n", YELLOW);
+		printf("||  %s%                          -*d\033[0m||%s / ___|(_) __ _| | __ / | / _ \\                            \033[0m||\n", GREEN, 39, user.totalPassedCredits, YELLOW);
+		printf("|| Total Mutu                              ||%s \\___ \\| |/ _` | |/ / | || | | |                           \033[0m||\n", YELLOW);
+		printf("||  %s%                        -*.2f\033[0m||%s  ___) | | (_| |   <  | || |_| |                           \033[0m||\n", GREEN, 39, user.totalGradePoints, YELLOW);
+		printf("|| IPK                                     ||%s |____/|_|\\__,_|_|\\_\\ |_(_)___/                            \033[0m||\n", YELLOW);
+		printf("||  %s%                        -*.2f\033[0m||%s / ___|  ___  __| | ___ _ __| |__   __ _ _ __   __ _       \033[0m||\n", GREEN, 39, user.gpa, YELLOW);
+		printf("|| SKS Diperoleh                           ||%s \\___ \\ / _ \\/ _` |/ _ \\ '__| '_ \\ / _` | '_ \\ / _` |      \033[0m||\n", YELLOW);
+		printf("||  %s%                          -*d\033[0m||%s  ___) |  __/ (_| |  __/ |  | | | | (_| | | | | (_| |      \033[0m||\n", GREEN, 39, user.totalCredits, YELLOW);
+		printf("|| Status Pembayaran                       ||%s |____/ \\___|\\__,_|\\___|_|  |_| |_|\\__,_|_| |_|\\__,_|      \033[0m||\n", YELLOW);
+		printf("||  %s%                          -*s\033[0m||                                                           ||\n", (user.tagihan == 0) ? GREEN : RED, 39, pembayaran, YELLOW);
+		printf("++===========================++============++===========================================================++\n");
 		printf("|| Grafik Semester Anda :    ||\n");
 		printf("||===========================||\n\n");		
 		printHistogram(user.semesterGrades, user.semesterSekarang);
@@ -52,37 +51,35 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		switch(opsi) {
 			case 1:
 				system("cls");
-				addCourse(&user);
+				tambahMataKuliah(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 				break;
 			case 2:
 				system("cls");
-				deleteCourse(&user);
+				hapusMataKuliah(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 				break;
 			case 3:
 				system("cls");
-				TampilkanPilihanMataKuliah(&user);
+				tampilkanMataKuliah(&user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 				break;
 			case 4:
 				system("cls");
-				showGrades(user);
+				tampilkanNilai(user);
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
 				break;
 			case 5:
 				system("cls");
-				printf("Ketik mata kuliah yang ingin anda cari : ");
-				scanf(" %[^\n]", &search);
-				searchCourse(search);
+				searchMataKuliah();
 				printf("Press ANY key to continue!");
 				getch();
 				system("cls");
@@ -127,32 +124,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 
 //OPTIONS
 // CASE 1
-void TampilkanPilihanMataKuliah(AcademicUser *user) {
-    Course *currentCourse = user->courses_head;
-    int found = 0, idx = 1;
-
-    printf("++===========================++\n");
-    printf("||   Pilihan Mata Kuliah     ||\n");
-    printf("++===========================++\n\n");
-    while (currentCourse != NULL) {
-        if (currentCourse->status == 0) {
-            printf("(%d) Kode Matakuliah: %s\n", idx, currentCourse->courseCode);
-            printf("    Nama Matakuliah: %s\n", currentCourse->courseName);
-            printf("    SKS: %d\n", currentCourse->credits);
-            printf("    Status: %s\n\n", currentCourse->status == 0 ? "Belum Disetujui" : "Telah Disetujui");
-            found = 1;
-        idx++;
-        }
-        currentCourse = currentCourse->next;
-    }
-
-    if (!found) {
-        printf("Maaf, anda belum memilih matakuliah untuk semester ini\n");
-    }
-}
-
-// CASE 2
-void addCourse(AcademicUser *user) {
+void tambahMataKuliah(AcademicUser *user) {
     int choice;
 
     printf("++===========================++===================================++\n");
@@ -215,8 +187,8 @@ void addCourse(AcademicUser *user) {
     }
 }
 
-// CASE 3
-void deleteCourse(AcademicUser *user) {
+// CASE 2
+void hapusMataKuliah(AcademicUser *user) {
     int choice;
 
     printf("++===========================++=====================================================++\n");
@@ -262,6 +234,31 @@ void deleteCourse(AcademicUser *user) {
         printf("Mata kuliah berhasil dibatalkan.\n");
     } else {
         printf("Pilihan tidak valid.\n");
+    }
+}
+
+// CASE 3
+void tampilkanMataKuliah(AcademicUser *user) {
+    Course *currentCourse = user->courses_head;
+    int found = 0, idx = 1;
+
+    printf("++===========================++\n");
+    printf("||   Pilihan Mata Kuliah     ||\n");
+    printf("++===========================++\n\n");
+    while (currentCourse != NULL) {
+        if (currentCourse->status == 0) {
+            printf("(%d) Kode Matakuliah: %s\n", idx, currentCourse->courseCode);
+            printf("    Nama Matakuliah: %s\n", currentCourse->courseName);
+            printf("    SKS: %d\n", currentCourse->credits);
+            printf("    Status: %s\n\n", currentCourse->status == 0 ? "Belum Disetujui" : "Telah Disetujui");
+            found = 1;
+        idx++;
+        }
+        currentCourse = currentCourse->next;
+    }
+
+    if (!found) {
+        printf("Maaf, anda belum memilih matakuliah untuk semester ini\n");
     }
 }
 
@@ -318,7 +315,7 @@ Course* sortCoursesByScore(Course *head, int ascending) {
     return sorted;
 }
 
-void showGrades(AcademicUser user) {
+void tampilkanNilai(AcademicUser user) {
     const char* nilaiString[] = {"A","A-","B+", "B","B-","C+", "C", "D+", "D", "E"};
     int jumlahNilai[10] = {0};  // Initialize count of each grade to 0
 
@@ -416,9 +413,12 @@ void toLowerCase(char *str) {
     }
 }
 
-void searchCourse(char searchTerm[]) {
+void searchMataKuliah() {
     int found = 0;
-    char lowerSearchTerm[100];
+    char lowerSearchTerm[100], searchTerm[100];
+    printf("Ketik mata kuliah yang ingin anda cari : ");
+	scanf(" %[^\n]", &searchTerm);
+
     strncpy(lowerSearchTerm, searchTerm, sizeof(lowerSearchTerm));
     toLowerCase(lowerSearchTerm);
 
@@ -437,8 +437,8 @@ void searchCourse(char searchTerm[]) {
         if (strstr(lowerCourseCode, lowerSearchTerm) != NULL || 
             strstr(lowerCourseName, lowerSearchTerm) != NULL) {
             printf("|| %-2d | %-7s | %-52s | %-3d | %-16d ||\n", i + 1, availableCourses[i].courseCode, 
-                   availableCourses[i].courseName, availableCourses[i].credits, 
-                   availableCourses[i].semester);
+                availableCourses[i].courseName, availableCourses[i].credits, 
+                availableCourses[i].semester);
             found = 1;
         }
     }
@@ -558,7 +558,7 @@ void loadStudentData(AcademicUser *student, const char *filename, int *stat) {
     fscanf(file, "%d", &student->batch);
     fscanf(file, " %[^\n]", student->major);
     fscanf(file, " %[^\n]", student->advisorName);
-    fscanf(file, "%s", student->advisorNumber);
+    fscanf(file, " %[^\n]", student->advisorNumber);
     fscanf(file, "%s", student->academicStatus);
     fscanf(file, "%d", &student->totalPassedCredits);
     fscanf(file, "%f", &student->totalGradePoints);
@@ -657,7 +657,7 @@ void writeCourses(AcademicUser *student, const char *filename) {
     }
 
     Course *currentCourse = student->courses_head;
-    while (currentCourse != NULL) {
+    while (currentCourse->next != NULL) {
         fprintf(file, "%s\n", currentCourse->courseCode);
         fprintf(file, "%s\n", currentCourse->courseName);
         fprintf(file, "%d\n", currentCourse->semester);
