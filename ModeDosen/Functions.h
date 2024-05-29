@@ -82,7 +82,7 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
         printf("||                                     |+===+===================================++\n");
         printf("|+=====================================+| 1 | Manage Mahasiswa Bimbingan        ||\n");
         printf("|| NIP                                 || 2 | Hitung rata-rata/keseluruhan data ||\n");
-        printf("||  %s%                      -*s\033[0m||   | mahasiswa                         ||\n", BLUE, 35, advisor.advisorName);
+        printf("||  %s%s%                    -*s\033[0m||   | mahasiswa                         ||\n", BLUE, "Prof. ", 29, advisor.advisorName);
         printf("|| Nama                                ||   |                                   ||\n");
         printf("||  %s%                      -*s\033[0m|| 0 | Keluar                            ||\n", CYAN, 35, advisor.advisorNumber);
         printf("++=====================================++===+===================================++\n\n");
@@ -151,7 +151,7 @@ void pilihMahasiswa(AcademicUser user, Dosen dosen) {
         tempName[idx] = (char *)malloc(50 * sizeof(char)); // Allocate memory for the new string
 
         fscanf(file, " %[^\n]", tempName[idx]);
-        fscanf(file, "%s", tempNPM);
+        fscanf(file, "%s\n", tempNPM);
         printf("|| %-2d || %-26s || %s  ||\n", idx + 1, tempName[idx], tempNPM);
         idx++;
     }
@@ -305,22 +305,28 @@ void beriNilai(AcademicUser *user) {
     // Melakukan iterasi melalui daftar matakuliah yang sudah disetujui
     currentCourse = user->courses_head;
     int courseIndex = 1;
-    printf("++================================================++\n");
-    printf("||         BERI NILAI MATAKULIAH MAHASISWA        ||\n");
-    printf("++================================================++\n");
+    printf("++====++======================================================++========++=========++\n");
+    printf("|| NO ||           BERI NILAI MATA KULIAH MAHASISWA           ||  KODE  ||  NILAI  ||\n");
+    printf("++====++======================================================++========++=========++\n");
     while (currentCourse != NULL) {
         if (currentCourse->status == 1) {
-            printf("%d. %-25s (%s)   \n", courseIndex, currentCourse->courseName, currentCourse->courseCode);
+            printf("|| %-3d|| %s%-53s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, (currentCourse->score > 40) ? GREEN : RED, currentCourse->score);
             courseIndex++;
         }
         currentCourse = currentCourse->next;
     }
+    printf("++====++======================================================++========++=========++\n\n");
+    printf("Masukkan 0 jika tidak ada yang ingin diubah");
 
     // Meminta input nilai dari dosen untuk setiap matakuliah
-    printf("\nMasukkan nomor matakuliah untuk memberi nilai lengkap: ");
+    printf("\n\nMasukkan nomor mata kuliah untuk memberi nilai lengkap: ");
     int choice;
     scanf("%d", &choice);
     choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
+
+    if (choice == -1) {
+        return;
+    }
 
     currentCourse = user->courses_head;
     int selectedCourseIndex = 0;
@@ -328,18 +334,18 @@ void beriNilai(AcademicUser *user) {
         if (currentCourse->status == 1) {
             if (selectedCourseIndex == choice) {
                 float floatSkor;
-                printf("\n++================================================++\n");
-                printf("||           BERI NILAI MATAKULIAH               ||\n");
-                printf("++================================================++\n");
-                printf("|| Nama Matakuliah   : %-26s ||\n", currentCourse->courseName);
-                printf("|| Kode Matakuliah   : %-26s ||\n", currentCourse->courseCode);
-                printf("|| Nilai Kuis        : ");
+                printf("\n++======================================================================++\n");
+                printf("||                        BERI NILAI MATA KULIAH                        ||\n");
+                printf("++======================================================================++\n");
+                printf("|| Nama Matakuliah : %-50s ||\n", currentCourse->courseName);                     
+                printf("|| Kode Matakuliah : %-50s ||\n", currentCourse->courseCode);
+                printf("|| Nilai Kuis  %s25%%\033[0m : ", GREEN);
                 scanf("%f", &currentCourse->kuis);
-                printf("|| Nilai UAS         : ");
+                printf("|| Nilai UAS   %s25%%\033[0m : ", GREEN);
                 scanf("%f", &currentCourse->uas);
-                printf("|| Nilai UTS         : ");
+                printf("|| Nilai UTS   %s25%%\033[0m : ", GREEN);
                 scanf("%f", &currentCourse->uts);
-                printf("|| Nilai Tugas       : ");
+                printf("|| Nilai Tugas %s25%%\033[0m : ", GREEN);
                 scanf("%f", &currentCourse->tugas);
                 // Hitung total nilai dan simpan dalam struktur data
                 currentCourse->score = (currentCourse->kuis + currentCourse->uas + currentCourse->uts + currentCourse->tugas) / 4.0;
@@ -381,7 +387,7 @@ void beriNilai(AcademicUser *user) {
                 user->totalGradePoints += currentCourse->credits * floatSkor; // Menambahkan total mutu
                 user->gpa = user->totalGradePoints / user->totalCredits; // Menghitung IPK baru
                 user->semesterGrades[user->semesterSekarang - 1] += currentCourse->credits * floatSkor / user->sksSekarang;
-                printf("++================================================++\n\n");
+                printf("++======================================================================++\n");
                 return;
             }
             selectedCourseIndex++;

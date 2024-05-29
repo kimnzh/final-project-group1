@@ -26,7 +26,7 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 		printf("|| Program Studi                           ||   |                                                       ||\n");
 		printf("||  %s%                          -*s\033[0m|| 7 | Panduan Penggunaan Program                            ||\n", CYAN, 39, user.major);
 		printf("|| Pembimbing Akademis                     ||   |                                                       ||\n");
-		printf("||  %s%                          -*s\033[0m|| 8 | Update profil mahasiswa                               ||\n", BLUE, 39, user.advisorName);
+		printf("||  %s%s%                        -*s\033[0m|| 8 | Update profil mahasiswa                               ||\n", BLUE, "Prof. ", 33, user.advisorName);
 		printf("||  %s%                          -*s\033[0m||   |                                                       ||\n", CYAN, 39, user.advisorNumber);
 		printf("|| Status Akademis                         || 9 | Keluar                                                ||\n");
 		printf("||  %s%                          -*s\033[0m||===+=======================================================++\n", (strcmp(user.academicStatus, "Aktif") == 0) ? GREEN : RED, 39, user.academicStatus);
@@ -197,6 +197,11 @@ void hapusMataKuliah(AcademicUser *user) {
     // Print the courses currently taken by the user
     Course *currentCourse = user->courses_head;
     int courseIndex = 1;
+
+    if (currentCourse == NULL) {
+    printf("++   TIDAK ADA MATA KULIAH YANG DIPILIH                                             ++\n");
+    }
+
     while (currentCourse != NULL) {
         printf("|| %-2d. %-52s %d SKS (%s) ||\n", courseIndex, currentCourse->courseName, currentCourse->credits, currentCourse->status == 0 ? "Belum disetujui" : "Sudah disetujui");
         currentCourse = currentCourse->next;
@@ -588,17 +593,17 @@ void loadCourses(AcademicUser *student, const char *filename) {
     Course *currentCourse = NULL;
     while (!feof(file)) {
         Course *newCourse = createCourseNode();
-        fscanf(file, "%s", newCourse->courseCode);
+        fscanf(file, "%s\n", newCourse->courseCode);
         fscanf(file, " %[^\n]", newCourse->courseName);
-        fscanf(file, "%d", &newCourse->semester);
-        fscanf(file, "%f", &newCourse->tugas);
-        fscanf(file, "%f", &newCourse->uas);
-        fscanf(file, "%f", &newCourse->uts);
-        fscanf(file, "%f", &newCourse->kuis);
-        fscanf(file, "%f", &newCourse->score);
-        fscanf(file, "%d", &newCourse->credits);
-        fscanf(file, "%s", newCourse->grade);
-        fscanf(file, "%d", &newCourse->status);
+        fscanf(file, "%d\n", &newCourse->semester);
+        fscanf(file, "%f\n", &newCourse->tugas);
+        fscanf(file, "%f\n", &newCourse->uas);
+        fscanf(file, "%f\n", &newCourse->uts);
+        fscanf(file, "%f\n", &newCourse->kuis);
+        fscanf(file, "%f\n", &newCourse->score);
+        fscanf(file, "%d\n", &newCourse->credits);
+        fscanf(file, "%s\n", newCourse->grade);
+        fscanf(file, "%d\n", &newCourse->status);
 
         if (student->courses_head == NULL) {
             student->courses_head = newCourse;
@@ -668,11 +673,7 @@ void writeCourses(AcademicUser *student, const char *filename) {
         fprintf(file, "%.2f\n", currentCourse->score);
         fprintf(file, "%d\n", currentCourse->credits);
         fprintf(file, "%s\n", currentCourse->grade);
-        fprintf(file, "%d", currentCourse->status);
-        currentCourse = currentCourse->next;
-        if (currentCourse != NULL) {
-            fprintf(file, "\n");  // Add newline only if there's another course, supaya saat read tidak NULL.
-        }
+        fprintf(file, "%d\n", currentCourse->status);
     }
 	
     fclose(file);

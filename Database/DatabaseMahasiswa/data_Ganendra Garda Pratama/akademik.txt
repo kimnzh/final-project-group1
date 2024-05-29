@@ -64,14 +64,3 @@ Pemrograman Dasar
 3
 A
 1
-ECE101
-Dasar Sistem Digital
-1
-0.00
-0.00
-0.00
-0.00
-0.00
-3
-0
-1
