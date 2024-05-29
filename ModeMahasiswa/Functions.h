@@ -662,7 +662,7 @@ void writeCourses(AcademicUser *student, const char *filename) {
     }
 
     Course *currentCourse = student->courses_head;
-    while (currentCourse->next != NULL) {
+    while (currentCourse != NULL) {
         fprintf(file, "%s\n", currentCourse->courseCode);
         fprintf(file, "%s\n", currentCourse->courseName);
         fprintf(file, "%d\n", currentCourse->semester);
