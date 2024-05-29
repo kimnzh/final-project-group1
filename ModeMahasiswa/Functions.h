@@ -673,7 +673,11 @@ void writeCourses(AcademicUser *student, const char *filename) {
         fprintf(file, "%.2f\n", currentCourse->score);
         fprintf(file, "%d\n", currentCourse->credits);
         fprintf(file, "%s\n", currentCourse->grade);
-        fprintf(file, "%d\n", currentCourse->status);
+        fprintf(file, "%d", currentCourse->status);
+        currentCourse = currentCourse->next;
+        if (currentCourse != NULL) {
+            fprintf(file, "\n");  // Add newline only if there's another course, supaya saat read tidak NULL.
+        }
     }
 	
     fclose(file);
