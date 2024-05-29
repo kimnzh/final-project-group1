@@ -34,6 +34,7 @@ void loadAdvisorData(Dosen *advisor, const char *filename, int *stat);
 void writeAdvisorData(Dosen *advisor, const char *filename);
 // MISCELLANEOUS
 void getAccessDosen(Dosen user, int *pass);
+void hitungRataRata();
 
 //MODE ADMIN
 void tambahDataMahasiswa();

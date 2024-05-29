@@ -163,8 +163,6 @@ void tambahMataKuliah(AcademicUser *user) {
                 return;
             }
             *newCourse = *selectedCourse; // Copy course details
-            newCourse->status = 0; // Set status to not approved
-            newCourse->next = NULL;
 
             // Append the new course to the end of the list
             if (user->courses_head == NULL) {
@@ -247,24 +245,19 @@ void tampilkanMataKuliah(AcademicUser *user) {
     Course *currentCourse = user->courses_head;
     int found = 0, idx = 1;
 
-    printf("++===========================++\n");
-    printf("||   Pilihan Mata Kuliah     ||\n");
-    printf("++===========================++\n\n");
+    printf("++====++=======================================================++========++=====++=================++\n");
+    printf("|| NO ||                      MATA KULIAH                      ||  KODE  || SKS ||     STATUS      ||\n");
+    printf("++====++=======================================================++========++=====++=================++\n");
     while (currentCourse != NULL) {
-        if (currentCourse->status == 0) {
-            printf("(%d) Kode Matakuliah: %s\n", idx, currentCourse->courseCode);
-            printf("    Nama Matakuliah: %s\n", currentCourse->courseName);
-            printf("    SKS: %d\n", currentCourse->credits);
-            printf("    Status: %s\n\n", currentCourse->status == 0 ? "Belum Disetujui" : "Telah Disetujui");
-            found = 1;
+        printf("|| %-3d|| %s%-54s\033[0m|| %-6s || %s%-3d\033[0m || %s%s\033[0m ||\n", idx, MAGENTA, currentCourse->courseName, currentCourse->courseCode, GREEN, currentCourse->credits, (currentCourse->status == 0) ? RED : GREEN, (currentCourse->status == 0) ? "Belum Disetujui" : "Telah Disetujui");
+        found = 1;
         idx++;
-        }
         currentCourse = currentCourse->next;
     }
 
-    if (!found) {
-        printf("Maaf, anda belum memilih matakuliah untuk semester ini\n");
-    }
+    if (!found)
+        printf("||         BELUM ADA MATA KULIAH YANG DIPILIH                                                      ||\n");
+    printf("++====++=======================================================++========++=====++=================++\n");
 }
 
 // CASE 4

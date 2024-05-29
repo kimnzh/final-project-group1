@@ -1,76 +1,3 @@
-void hitungRataRata() {
-    FILE *file = fopen("DatabaseMahasiswa/allData.txt", "r");
-    if (file == NULL) {
-        perror("Failed to open allData file");
-        return;
-    }
-
-    int totalMahasiswa = 0;
-    float totalGPA = 0.0;
-    float totalGradePoints = 0.0;
-    float totalSemesterGrades[8] = {0.0};
-    float grade [8];
-    int totalPassedCredits = 0;
-
-    char name[50], npm[50];
-    
-    // Buffer to store all names and npms to process in parallel
-    char names[100][50];
-    char npms[100][50];
-    int count = 0;
-
-    while (!feof(file)) {
-        fscanf(file, " %[^\n]", names[count]);
-        fscanf(file, "%s", npms[count]);
-        count++;
-    }
-
-    fclose(file);
-
-    #pragma omp parallel for reduction(+:totalGPA, totalGradePoints, totalPassedCredits) reduction(+:totalSemesterGrades[:8]) 
-    for (int i = 0; i < count; i++) {
-        char sourceMa[100] = "DatabaseMahasiswa/data_";
-        char appMa[MAX_APPEND_LENGTH];
-
-        sprintf(appMa, "%s/mahasiswa.txt", names[i]);
-        append(sourceMa, appMa);
-
-        AcademicUser user;
-        int stat = 1;
-        loadStudentData(&user, sourceMa, &stat);
-
-        if (stat) {
-            #pragma omp critical
-            totalMahasiswa++;
-
-            totalGPA += user.gpa;
-            totalGradePoints += user.totalGradePoints;
-            for (int j = 0; j < 8; j++) {
-                totalSemesterGrades[j] += user.semesterGrades[j];
-            }
-            totalPassedCredits += user.totalPassedCredits;
-        }
-    }
-
-    if (totalMahasiswa == 0) {
-        printf("Tidak ada data mahasiswa yang ditemukan.\n");
-        return;
-    }
-
-    printf("Rata-rata IPK: %s%.2f\033[0m\n", GREEN, totalGPA / totalMahasiswa);
-    printf("Rata-rata Total Mutu: %s%.2f\033[0m\n", GREEN, totalGradePoints / totalMahasiswa);
-    printf("Jumlah Mahasiswa yang Terdata di Sistem Akademis : %d\n\n",totalMahasiswa);
-    printf("++===============================++\n");
-    for (int i = 0; i < 8; i++) {
-        grade[i]=totalSemesterGrades[i] / totalMahasiswa;
-        printf("|| Rata-rata IP Semester %d: %s%.2f\033[0m ||\n", i + 1, (totalSemesterGrades[i] / totalMahasiswa == 0) ? RED : GREEN, totalSemesterGrades[i] / totalMahasiswa);
-    }
-    printf("++===============================++\n\n");
-    printf("-- GRAFIK IP --\n\n");
-    printHistogram(grade, MAX_SEMESTERS);
-    printf("Rata-rata SKS Lulus: %s%.2f\033[0m\n\n", GREEN, (float)totalPassedCredits / totalMahasiswa);
-}
-
 //MAIN MENU
 void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
 	int opsi = -1;
@@ -308,12 +235,16 @@ void beriNilai(AcademicUser *user) {
     printf("++====++======================================================++========++=========++\n");
     printf("|| NO ||           BERI NILAI MATA KULIAH MAHASISWA           ||  KODE  ||  NILAI  ||\n");
     printf("++====++======================================================++========++=========++\n");
-    while (currentCourse != NULL) {
-        if (currentCourse->status == 1) {
-            printf("|| %-3d|| %s%-53s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, (currentCourse->score > 40) ? GREEN : RED, currentCourse->score);
-            courseIndex++;
+    if (currentCourse == NULL) {
+        printf("||                TIDAK ADA MATA KULIAH YANG DIPILIH                               ||\n");
+    } else {
+        while (currentCourse != NULL) {
+            if (currentCourse->status == 1) {
+                printf("|| %-3d|| %s%-53s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, (currentCourse->score > 40) ? GREEN : RED, currentCourse->score);
+                courseIndex++;
+            }
+            currentCourse = currentCourse->next;
         }
-        currentCourse = currentCourse->next;
     }
     printf("++====++======================================================++========++=========++\n\n");
     printf("Masukkan 0 jika tidak ada yang ingin diubah");
@@ -322,12 +253,17 @@ void beriNilai(AcademicUser *user) {
     printf("\n\nMasukkan nomor mata kuliah untuk memberi nilai lengkap: ");
     int choice;
     scanf("%d", &choice);
-    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
 
-    if (choice == -1) {
+    if (choice > courseIndex - 1) {
+        printf("Pilihan melebih indeks yang tersedia. Gagal melakukan perubahan\n\n");
         return;
     }
 
+    if (choice == 0) {
+        return;
+    }
+
+    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
     currentCourse = user->courses_head;
     int selectedCourseIndex = 0;
     while (currentCourse != NULL) {
@@ -402,23 +338,37 @@ void beriNilai(AcademicUser *user) {
 void setujuiMatakuliah(AcademicUser *user) {
     Course *currentCourse = user->courses_head;
     int courseIndex = 1;
-    printf("++===================================================================++\n");
-    printf("||                  SETUJUI MATAKULIAH MAHASISWA                     ||\n");
-    printf("++===================================================================++\n");
-    while (currentCourse != NULL) {
-        if (currentCourse->status == 0) {
-            printf("%-2d. %-52s (%s) (Matakuliah semester %d)  \n", courseIndex, currentCourse->courseName, currentCourse->courseCode,currentCourse->semester);
-            courseIndex++;
+    printf("++====++======================================================++========++==========++\n");
+    printf("|| NO ||              SETUJUI MATA KULIAH                     ||  KODE  || SEMESTER ||\n");
+    printf("++====++======================================================++========++==========++\n");
+    if (currentCourse == NULL) {
+        printf("||                TIDAK ADA MATA KULIAH YANG DIPILIH                               ||\n");
+    } else {
+        while (currentCourse != NULL) {
+            if (currentCourse->status == 0) {
+                printf("|| %-3d|| %s%-53s\033[0m|| %-6s ||    %s%-5d\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, GREEN, currentCourse->semester);
+                courseIndex++;
+            }
+            currentCourse = currentCourse->next;
         }
-        currentCourse = currentCourse->next;
     }
+    printf("++====++======================================================++========++==========++\n\n");
+    printf("Masukkan 0 jika tidak ada yang ingin diubah");
 
-    // Meminta input dari dosen untuk menyetujui matakuliah
-    printf("\nMasukkan nomor matakuliah untuk disetujui: ");
+    // Meminta input dari dosen untuk menyetujui mata kuliah
+    printf("\n\nMasukkan nomor matakuliah untuk disetujui: ");
     int choice;
     scanf("%d", &choice);
-    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
 
+    if (choice > courseIndex - 1) {
+        printf("Pilihan melebih indeks yang tersedia. Gagal melakukan perubahan\n\n");
+        return;
+    }
+    if (choice == 0) {
+        return;
+    }
+
+    choice--; // Sesuaikan dengan indeks array (dimulai dari 0)
     currentCourse = user->courses_head;
     int selectedCourseIndex = 0;
     while (currentCourse != NULL) {
@@ -510,4 +460,77 @@ void getAccessDosen(Dosen user, int *pass) {
         system("cls");
         return;
     }
+}
+
+void hitungRataRata() {
+    FILE *file = fopen("DatabaseMahasiswa/allData.txt", "r");
+    if (file == NULL) {
+        perror("Failed to open allData file");
+        return;
+    }
+
+    int totalMahasiswa = 0;
+    float totalGPA = 0.0;
+    float totalGradePoints = 0.0;
+    float totalSemesterGrades[8] = {0.0};
+    float grade [8];
+    int totalPassedCredits = 0;
+
+    char name[50], npm[50];
+    
+    // Buffer to store all names and npms to process in parallel
+    char names[100][50];
+    char npms[100][50];
+    int count = 0;
+
+    while (!feof(file)) {
+        fscanf(file, " %[^\n]", names[count]);
+        fscanf(file, "%s", npms[count]);
+        count++;
+    }
+
+    fclose(file);
+
+    #pragma omp parallel for reduction(+:totalGPA, totalGradePoints, totalPassedCredits) reduction(+:totalSemesterGrades[:8]) 
+    for (int i = 0; i < count; i++) {
+        char sourceMa[100] = "DatabaseMahasiswa/data_";
+        char appMa[MAX_APPEND_LENGTH];
+
+        sprintf(appMa, "%s/mahasiswa.txt", names[i]);
+        append(sourceMa, appMa);
+
+        AcademicUser user;
+        int stat = 1;
+        loadStudentData(&user, sourceMa, &stat);
+
+        if (stat) {
+            #pragma omp critical
+            totalMahasiswa++;
+
+            totalGPA += user.gpa;
+            totalGradePoints += user.totalGradePoints;
+            for (int j = 0; j < 8; j++) {
+                totalSemesterGrades[j] += user.semesterGrades[j];
+            }
+            totalPassedCredits += user.totalPassedCredits;
+        }
+    }
+
+    if (totalMahasiswa == 0) {
+        printf("Tidak ada data mahasiswa yang ditemukan.\n");
+        return;
+    }
+
+    printf("Rata-rata IPK: %s%.2f\033[0m\n", GREEN, totalGPA / totalMahasiswa);
+    printf("Rata-rata Total Mutu: %s%.2f\033[0m\n", GREEN, totalGradePoints / totalMahasiswa);
+    printf("Jumlah Mahasiswa yang Terdata di Sistem Akademis : %d\n\n",totalMahasiswa);
+    printf("++===============================++\n");
+    for (int i = 0; i < 8; i++) {
+        grade[i]=totalSemesterGrades[i] / totalMahasiswa;
+        printf("|| Rata-rata IP Semester %d: %s%.2f\033[0m ||\n", i + 1, (totalSemesterGrades[i] / totalMahasiswa == 0) ? RED : GREEN, totalSemesterGrades[i] / totalMahasiswa);
+    }
+    printf("++===============================++\n\n");
+    printf("-- GRAFIK IP --\n\n");
+    printHistogram(grade, MAX_SEMESTERS);
+    printf("Rata-rata SKS Lulus: %s%.2f\033[0m\n\n", GREEN, (float)totalPassedCredits / totalMahasiswa);
 }

@@ -97,7 +97,7 @@ void tambahDataMahasiswa() {
     fprintf(fileMa, "%s\n", nama);
     fprintf(fileMa, "%d\n", batch);
     fprintf(fileMa, "%s\n", major);
-    fprintf(fileMa, "Prof. %s\n", tempName[advisorIndex]);
+    fprintf(fileMa, "%s\n", tempName[advisorIndex]);
     fprintf(fileMa, "%s\n", tempNIP[advisorIndex]);
     fprintf(fileMa, "%s\n", "Kosong");
     fprintf(fileMa, "%d\n", 0);
@@ -126,7 +126,6 @@ void tambahDataMahasiswa() {
     char doSource[100] = "Database/DatabaseDosen/data_dosen_";
     append(doSource, tempName[advisorIndex]);
     append(doSource, ".txt");
-    printf("%s", doSource);
 
     FILE *doFile = fopen(doSource, "a");
 
@@ -134,6 +133,13 @@ void tambahDataMahasiswa() {
     fprintf(doFile, "%lu\n", NPM);
 
     fclose(doFile);
+
+    FILE *fileData = fopen("Database/DatabaseMahasiswa/allData.txt", "a");
+
+    fprintf(fileData, "%s\n", nama);
+    fprintf(fileData, "%lu\n", NPM);
+
+    fclose(fileData);
 
     #pragma omp parallel for
     for (int i = 0; i < idx; i++) {

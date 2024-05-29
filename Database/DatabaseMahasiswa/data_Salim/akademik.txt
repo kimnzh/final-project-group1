@@ -31,7 +31,7 @@ Fisika Listrik
 3
 B+
 1
-PHY101
+PHY102
 Praktikum Fisika Listrik
 1
 100.00
@@ -53,8 +53,8 @@ Kalkulus
 4
 B+
 1
-CSL101
-Pemrograman Dasar dan Praktikum
+CS101
+Pemrograman Dasar
 1
 100.00
 100.00
@@ -64,7 +64,7 @@ Pemrograman Dasar dan Praktikum
 3
 A
 1
-DSB101
+ECE101
 Dasar Sistem Digital
 1
 100.00
@@ -85,7 +85,7 @@ Aljabar Linier Lanjut
 0.00
 2
 0
-0
+1
 STT101
 Statistika
 3
