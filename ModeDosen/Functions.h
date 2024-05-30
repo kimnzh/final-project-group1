@@ -268,8 +268,9 @@ void beriNilai(AcademicUser *user) {
     int selectedCourseIndex = 0;
     while (currentCourse != NULL) {
         if (currentCourse->status == 1) {
-            if (selectedCourseIndex == choice) {
+            if (selectedCourseIndex == choice && currentCourse->score == 0.0) {
                 float floatSkor;
+                printf("%.2f",currentCourse->score);
                 printf("\n++======================================================================++\n");
                 printf("||                        BERI NILAI MATA KULIAH                        ||\n");
                 printf("++======================================================================++\n");
@@ -326,6 +327,10 @@ void beriNilai(AcademicUser *user) {
                 printf("++======================================================================++\n");
                 return;
             }
+            if (selectedCourseIndex == choice && currentCourse->score != 0.0){
+            	printf("Mohon maaf, matakuliah yang anda pilih sudah dinilai sebelumnya sehingga tidak dapat dinilai lagi\n");
+            	break;
+			}
             selectedCourseIndex++;
         }
         currentCourse = currentCourse->next;
