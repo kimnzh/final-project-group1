@@ -8,9 +8,9 @@ void mainMenuDosen(AcademicUser user, Dosen advisor, int *size) {
         printf("||        UNIVERSITAS PROGLAN 2        ||        SISTEM AKADEMIK (DOSEN)        ||\n");
         printf("||                                     |+===+===================================++\n");
         printf("|+=====================================+| 1 | Manage Mahasiswa Bimbingan        ||\n");
-        printf("|| NIP                                 || 2 | Hitung rata-rata/keseluruhan data ||\n");
+        printf("|| Nama                                || 2 | Hitung rata-rata/keseluruhan data ||\n");
         printf("||  %s%s%                    -*s\033[0m||   | mahasiswa                         ||\n", BLUE, "Prof. ", 29, advisor.advisorName);
-        printf("|| Nama                                ||   |                                   ||\n");
+        printf("|| NIP                                 ||   |                                   ||\n");
         printf("||  %s%                      -*s\033[0m|| 0 | Keluar                            ||\n", CYAN, 35, advisor.advisorNumber);
         printf("++=====================================++===+===================================++\n\n");
 
@@ -463,7 +463,7 @@ void getAccessDosen(Dosen user, int *pass) {
 }
 
 void hitungRataRata() {
-    FILE *file = fopen("DatabaseMahasiswa/allData.txt", "r");
+    FILE *file = fopen("Database/DatabaseMahasiswa/allData.txt", "r");
     if (file == NULL) {
         perror("Failed to open allData file");
         return;
@@ -485,7 +485,7 @@ void hitungRataRata() {
 
     while (!feof(file)) {
         fscanf(file, " %[^\n]", names[count]);
-        fscanf(file, "%s", npms[count]);
+        fscanf(file, "%s\n", npms[count]);
         count++;
     }
 
@@ -493,7 +493,7 @@ void hitungRataRata() {
 
     #pragma omp parallel for reduction(+:totalGPA, totalGradePoints, totalPassedCredits) reduction(+:totalSemesterGrades[:8]) 
     for (int i = 0; i < count; i++) {
-        char sourceMa[100] = "DatabaseMahasiswa/data_";
+        char sourceMa[100] = "Database/DatabaseMahasiswa/data_";
         char appMa[MAX_APPEND_LENGTH];
 
         sprintf(appMa, "%s/mahasiswa.txt", names[i]);

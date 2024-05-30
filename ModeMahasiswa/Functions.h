@@ -546,6 +546,7 @@ void loadStudentData(AcademicUser *student, const char *filename, int *stat) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Nama mahasiswa tidak ditemukan");
+        printf("%s", filename);
         *stat = 0;
         return;
     }

@@ -121,6 +121,23 @@ void tambahDataMahasiswa() {
     fclose(fileMa);
 
     FILE *fileAk = fopen(sourceAk, "w");
+
+    if (!fileAk) {
+        perror("Gagal membuka file akademik");
+        return;
+    }
+    fprintf(fileAk, "%s\n", "CS101");
+    fprintf(fileAk, "%s\n", "Pemrograman Dasar");
+    fprintf(fileAk, "%d\n", 1);
+    fprintf(fileAk, "%.2f\n", 0);
+    fprintf(fileAk, "%.2f\n", 0);
+    fprintf(fileAk, "%.2f\n", 0);
+    fprintf(fileAk, "%.2f\n", 0);
+    fprintf(fileAk, "%.2f\n", 0);
+    fprintf(fileAk, "%d\n", 3);
+    fprintf(fileAk, "%s\n", "0");
+    fprintf(fileAk, "%d", 0);
+
     fclose(fileAk);
 
     char doSource[100] = "Database/DatabaseDosen/data_dosen_";
