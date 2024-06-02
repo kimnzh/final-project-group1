@@ -42,3 +42,7 @@ int generateNPM(int batch);
 int generateAdvisorIndex(int idx);
 void tambahDataDosen();
 void generateNIP(char NIP[]);
+
+//STRING MANIPULE
+void lowercase(char *string);
+void append(char *string, char append[]);

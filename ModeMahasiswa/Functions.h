@@ -127,18 +127,24 @@ void mainMenuMahasiswa(AcademicUser user, int *size, char sourceMa[], char sourc
 void tambahMataKuliah(AcademicUser *user) {
     int choice;
 
-    printf("++===========================++===================================++\n");
-    printf("||   UNIVERSITAS PROGLAN 2   ||   DAFTAR MATA KULIAH              ||\n");
-    printf("++===========================++===================================++\n");
+    printf("++====++=========++======================================================++=====++==================++\n");
+    printf("|| NO || KODE MK ||                   NAMA MATA KULIAH                   || SKS || SEMESTER         ||\n");
+    printf("++====++=========++======================================================++=====++==================++\n");
 
     // Print available courses
     for (int i = 0; i < sizeof(availableCourses)/sizeof(availableCourses[0]); i++) {
-        printf("|| %-2d. %-52s %d SKS ||\n", i + 1, availableCourses[i].courseName, availableCourses[i].credits);
+        printf("|| %-2d || %-7s || %s%-52s\033[0m || %s%-3d\033[0m || %-16d ||\n", i + 1, availableCourses[i].courseCode, MAGENTA, availableCourses[i].courseName, GREEN, availableCourses[i].credits, availableCourses[i].semester);
     }
 
-    printf("++================================================================++\n\n");
-    printf("Pilih mata kuliah (masukkan nomor): ");
+    printf("++====++=========++======================================================++=====++==================++\n\n");
+    printf("Masukkan 0 jika tidak ada yang ingin diubah");
+    printf("\n\nPilih mata kuliah (masukkan nomor): ");
     scanf("%d", &choice);
+
+    if (choice == 0) {
+        return;
+    }
+
     choice--; // To match array index (0-based)
 
     if (choice >= 0 && choice < sizeof(availableCourses)/sizeof(availableCourses[0])) {
@@ -189,9 +195,9 @@ void tambahMataKuliah(AcademicUser *user) {
 void hapusMataKuliah(AcademicUser *user) {
     int choice;
 
-    printf("++===========================++=====================================================++\n");
-    printf("||   UNIVERSITAS PROGLAN 2   ||   DAFTAR MATA KULIAH                                ||\n");
-    printf("++===========================++=====================================================++\n");
+    printf("++====++=======================================================++========++=====++=================++\n");
+    printf("|| NO ||                      MATA KULIAH                      ||  KODE  || SKS ||     STATUS      ||\n");
+    printf("++====++=======================================================++========++=====++=================++\n");
     // Print the courses currently taken by the user
     Course *currentCourse = user->courses_head;
     int courseIndex = 1;
@@ -201,14 +207,20 @@ void hapusMataKuliah(AcademicUser *user) {
     }
 
     while (currentCourse != NULL) {
-        printf("|| %-2d. %-52s %d SKS (%s) ||\n", courseIndex, currentCourse->courseName, currentCourse->credits, currentCourse->status == 0 ? "Belum disetujui" : "Sudah disetujui");
+        printf("|| %-3d|| %s%-54s\033[0m|| %-6s || %s%-3d\033[0m || %s%s\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, GREEN, currentCourse->credits, (currentCourse->status == 0) ? RED : GREEN, (currentCourse->status == 0) ? "Belum Disetujui" : "Telah Disetujui");
         currentCourse = currentCourse->next;
         courseIndex++;
     }
-
-    printf("++===========================++=====================================================++\n\n");
-    printf("Pilih mata kuliah yang akan dibatalkan (masukkan nomor): ");
+    printf("++====++=======================================================++========++=====++=================++\n\n");
+    printf("Masukkan 0 jika tidak ada yang ingin diubah");
+    
+    printf("\n\nPilih mata kuliah yang akan dibatalkan (masukkan nomor): ");
     scanf("%d", &choice);
+    
+    if (choice == 0) {
+        return;
+    }
+
     choice--; // To match array index (0-based)
 
     if (choice >= 0) {
@@ -329,9 +341,9 @@ void tampilkanNilai(AcademicUser user) {
         currentCourse = currentCourse->next;
     }
     
-    printf("||===========================||\n");
+    printf("++===========================++\n");
     printf("|| Statistik Nilai:          ||\n");
-    printf("||===========================||\n");
+    printf("++===========================++\n");
     printf("|| Nilai            Jumlah   ||\n");
     int cekNilai = 0;
     for (int i = 0; i < 10; i++) {
@@ -343,13 +355,13 @@ void tampilkanNilai(AcademicUser user) {
     if (cekNilai == 0) {
         printf("|| -                 -       ||\n");
     }
-    printf("||===========================||\n\n");
+    printf("++===========================++\n\n");
 
     int option = 0;
     while (option != 1 && option != 2 && option != 3) {
         printf("1. Tampilkan nilai lengkap untuk mata kuliah tertentu\n");
         printf("2. Urutkan mata kuliah berdasarkan score (ascending)\n");
-        printf("3. Urutkan mata kuliah berdasarkan score (descending)\n");
+        printf("3. Urutkan mata kuliah berdasarkan score (descending)\n\n");
         printf("Pilihan: ");
         scanf("%d", &option);
     }
@@ -360,13 +372,18 @@ void tampilkanNilai(AcademicUser user) {
 
     currentCourse = user.courses_head;
     int courseIndex = 1;
+    printf("\n++====++=======================================================++========++=========++\n");
+    printf("|| NO ||                      MATA KULIAH                      ||  KODE  ||  SCORE  ||\n");
+    printf("++====++=======================================================++========++=========++\n");
     while (currentCourse != NULL) {
         if (strcmp(currentCourse->grade, "") != 0) {
-            printf("%-2d. %-52s (%s) - Score: %.2f\n", courseIndex, currentCourse->courseName, currentCourse->courseCode, currentCourse->score);
+            printf("|| %-3d|| %s%-54s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, (currentCourse->score < 55) ? RED : GREEN, currentCourse->score);
             courseIndex++;
         }
         currentCourse = currentCourse->next;
     }
+    printf("++====++=======================================================++========++=========++\n");
+
 
     if (option == 1) {
         // Prompt user to select a course to view grades
@@ -376,6 +393,7 @@ void tampilkanNilai(AcademicUser user) {
         choice--; // To match array index (0-based)
 
         // Find the selected course
+        system("cls");
         currentCourse = user.courses_head;
         int selectedCourseIndex = 0;
         while (currentCourse != NULL) {
@@ -384,14 +402,14 @@ void tampilkanNilai(AcademicUser user) {
                     printf("\n++==========================================================================++\n");
                     printf("||          NILAI LENGKAP MATAKULIAH                                        ||\n");
                     printf("++==========================================================================++\n");
-                    printf("|| Nama Matakuliah   : %-52s ||\n", currentCourse->courseName);
-                    printf("|| Kode Matakuliah   : %-52s ||\n", currentCourse->courseCode);
-                    printf("|| Nilai Kuis        : %-52.2f ||\n", currentCourse->kuis);
-                    printf("|| Nilai UAS         : %-52.2f ||\n", currentCourse->uas);
-                    printf("|| Nilai UTS         : %-52.2f ||\n", currentCourse->uts);
-                    printf("|| Nilai Tugas       : %-52.2f ||\n", currentCourse->tugas);
-                    printf("|| Nilai Huruf       : %-52s ||\n", currentCourse->grade);
-                    printf("|| Nilai Rata-rata   : %-52.2f ||\n", currentCourse->score);
+                    printf("|| Nama Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, currentCourse->courseName);
+                    printf("|| Kode Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, currentCourse->courseCode);
+                    printf("|| Nilai Kuis        : %s%-52.2f\033[0m ||\n", (currentCourse->kuis < 55) ? RED : GREEN, currentCourse->kuis);
+                    printf("|| Nilai UAS         : %s%-52.2f\033[0m ||\n", (currentCourse->uas < 55) ? RED : GREEN, currentCourse->uas);
+                    printf("|| Nilai UTS         : %s%-52.2f\033[0m ||\n", (currentCourse->uts < 55) ? RED : GREEN, currentCourse->uts);
+                    printf("|| Nilai Tugas       : %s%-52.2f\033[0m ||\n", (currentCourse->tugas < 55) ? RED : GREEN, currentCourse->tugas);
+                    printf("|| Grade             : %s%-52s\033[0m ||\n", (currentCourse->score < 55) ? RED : GREEN, currentCourse->grade);
+                    printf("|| Nilai Rata-rata   : %s%-52.2f\033[0m ||\n", (currentCourse->score < 55) ? RED : GREEN, currentCourse->score);
                     printf("++==========================================================================++\n\n");
                     return;
                 }
@@ -420,9 +438,9 @@ void searchMataKuliah() {
     strncpy(lowerSearchTerm, searchTerm, sizeof(lowerSearchTerm));
     toLowerCase(lowerSearchTerm);
 
-    printf("++==============================================================================================++\n");
-    printf("|| No | Kode MK |                   Nama Mata Kuliah                   | SKS | Semester         ||\n");
-    printf("++==============================================================================================++\n");
+    printf("++====++=========++======================================================++=====++==================++\n");
+    printf("|| NO || KODE MK ||                   NAMA MATA KULIAH                   || SKS || SEMESTER         ||\n");
+    printf("++====++=========++======================================================++=====++==================++\n");
 
     for (int i = 0; i < sizeof(availableCourses) / sizeof(availableCourses[0]); ++i) {
         char lowerCourseCode[10];
@@ -434,17 +452,15 @@ void searchMataKuliah() {
 
         if (strstr(lowerCourseCode, lowerSearchTerm) != NULL || 
             strstr(lowerCourseName, lowerSearchTerm) != NULL) {
-            printf("|| %-2d | %-7s | %-52s | %-3d | %-16d ||\n", i + 1, availableCourses[i].courseCode, 
-                availableCourses[i].courseName, availableCourses[i].credits, 
-                availableCourses[i].semester);
+            printf("|| %-2d || %-7s || %-52s || %-3d || %-16d ||\n", i + 1, availableCourses[i].courseCode, availableCourses[i].courseName, availableCourses[i].credits, availableCourses[i].semester);
             found = 1;
         }
     }
 
     if (!found) {
-        printf("|| Tidak ada mata kuliah yang cocok dengan pencarian Anda                                        ||\n");
+        printf("||         TIDAK ADA MATA KULIAH YANG COCOK DENGAN PENCARIAN ANDA                                   ||\n");
     }
-    printf("++==============================================================================================++\n");
+    printf("++====++=========++======================================================++=====++==================++\n");
 }
 
 
@@ -505,7 +521,7 @@ void updateProfile(AcademicUser *user) {
     printf("Pilihan:\n");
     printf("1. Ubah Nama\n");
     printf("2. Ubah Password\n");
-    printf("3. Kembali ke Menu Utama\n");
+    printf("3. Kembali ke Menu Utama\n\n");
 
     int choice;
     printf("Masukkan pilihan: ");

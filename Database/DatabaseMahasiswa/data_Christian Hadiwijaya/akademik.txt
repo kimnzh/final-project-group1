@@ -78,14 +78,14 @@ A
 MAT104
 Aljabar Linier Lanjut
 4
-0.00
-0.00
-0.00
-0.00
-0.00
+81.00
+97.00
+86.00
+89.00
+88.25
 2
-0
-0
+A
+1
 STT101
 Statistika
 3
@@ -96,7 +96,7 @@ Statistika
 0.00
 3
 0
-0
+1
 CS116
 Profesionalisme dan Etika dalam Teknologi Informasi
 6
@@ -107,4 +107,4 @@ Profesionalisme dan Etika dalam Teknologi Informasi
 0.00
 2
 0
-0
+1
