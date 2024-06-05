@@ -273,63 +273,42 @@ void tampilkanMataKuliah(AcademicUser *user) {
 }
 
 // CASE 4
-Course* sortCoursesByScore(Course *head, int ascending) {
-    if (head == NULL || head->next == NULL) return head;
 
-    // Salin daftar ke dalam linked list baru
-    Course *copyHead = NULL;
-    Course *copyTail = NULL;
+void bubbleSort(Course **array, int n, int ascending) {
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if ((ascending && array[j]->score > array[j+1]->score) || (!ascending && array[j]->score < array[j+1]->score)) {
+                Course *temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+            }
+        }
+    }
+}
+
+Course** createCourseArray(Course *head, int *size) {
+    *size = 0;
     Course *current = head;
     while (current != NULL) {
-        Course *newNode = (Course*)malloc(sizeof(Course));
-        *newNode = *current; // Salin isi dari setiap node
-        newNode->next = NULL;
-
-        if (copyHead == NULL) {
-            copyHead = newNode;
-            copyTail = newNode;
-        } else {
-            copyTail->next = newNode;
-            copyTail = newNode;
-        }
+        (*size)++;
         current = current->next;
     }
 
-    // Urutkan salinan daftar
-    Course *sorted = NULL;
-    current = copyHead;
-    while (current != NULL) {
-        Course *next = current->next;
-        if (sorted == NULL || (ascending ? current->score < sorted->score : current->score > sorted->score)) {
-            current->next = sorted;
-            sorted = current;
-        } else {
-            Course *temp = sorted;
-            while (temp->next != NULL && (ascending ? current->score >= temp->next->score : current->score <= temp->next->score)) {
-                temp = temp->next;
-            }
-            current->next = temp->next;
-            temp->next = current;
-        }
-        current = next;
-    }
-
-    // Hapus salinan daftar
-    current = copyHead;
-    while (current != NULL) {
-        Course *temp = current;
+    Course **array = (Course**)malloc(*size * sizeof(Course*));
+    current = head;
+    for (int i = 0; i < *size; i++) {
+        array[i] = current;
         current = current->next;
-        free(temp);
     }
 
-    return sorted;
+    return array;
 }
 
 void tampilkanNilai(AcademicUser user) {
     const char* nilaiString[] = {"A","A-","B+", "B","B-","C+", "C", "D+", "D", "E"};
-    int jumlahNilai[10] = {0};  // Initialize count of each grade to 0
+    int jumlahNilai[10] = {0};  
 
-    // Print the list of graded courses
+   
     Course *currentCourse = user.courses_head;
     while (currentCourse != NULL) {
         for (int j = 0; j < 10; j++) {
@@ -366,8 +345,11 @@ void tampilkanNilai(AcademicUser user) {
         scanf("%d", &option);
     }
 
+    int size;
+    Course **courseArray = createCourseArray(user.courses_head, &size);
+
     if (option == 2 || option == 3) {
-        user.courses_head = sortCoursesByScore(user.courses_head, option == 2);
+        bubbleSort(courseArray, size, option == 2);
     }
 
     currentCourse = user.courses_head;
@@ -375,15 +357,13 @@ void tampilkanNilai(AcademicUser user) {
     printf("\n++====++=======================================================++========++=========++\n");
     printf("|| NO ||                      MATA KULIAH                      ||  KODE  ||  SCORE  ||\n");
     printf("++====++=======================================================++========++=========++\n");
-    while (currentCourse != NULL) {
-        if (strcmp(currentCourse->grade, "") != 0) {
-            printf("|| %-3d|| %s%-54s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, currentCourse->courseName, currentCourse->courseCode, (currentCourse->score < 55) ? RED : GREEN, currentCourse->score);
+    for (int i = 0; i < size; i++) {
+        if (strcmp(courseArray[i]->grade, "") != 0) {
+            printf("|| %-3d|| %s%-54s\033[0m|| %-6s || %s%-7.2f\033[0m ||\n", courseIndex, MAGENTA, courseArray[i]->courseName, courseArray[i]->courseCode, (courseArray[i]->score < 55) ? RED : GREEN, courseArray[i]->score);
             courseIndex++;
         }
-        currentCourse = currentCourse->next;
     }
     printf("++====++=======================================================++========++=========++\n");
-
 
     if (option == 1) {
         // Prompt user to select a course to view grades
@@ -394,32 +374,33 @@ void tampilkanNilai(AcademicUser user) {
 
         // Find the selected course
         system("cls");
-        currentCourse = user.courses_head;
         int selectedCourseIndex = 0;
-        while (currentCourse != NULL) {
-            if (strcmp(currentCourse->grade, "") != 0) {
+        for (int i = 0; i < size; i++) {
+            if (strcmp(courseArray[i]->grade, "") != 0) {
                 if (selectedCourseIndex == choice) {
                     printf("\n++==========================================================================++\n");
                     printf("||          NILAI LENGKAP MATAKULIAH                                        ||\n");
                     printf("++==========================================================================++\n");
-                    printf("|| Nama Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, currentCourse->courseName);
-                    printf("|| Kode Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, currentCourse->courseCode);
-                    printf("|| Nilai Kuis        : %s%-52.2f\033[0m ||\n", (currentCourse->kuis < 55) ? RED : GREEN, currentCourse->kuis);
-                    printf("|| Nilai UAS         : %s%-52.2f\033[0m ||\n", (currentCourse->uas < 55) ? RED : GREEN, currentCourse->uas);
-                    printf("|| Nilai UTS         : %s%-52.2f\033[0m ||\n", (currentCourse->uts < 55) ? RED : GREEN, currentCourse->uts);
-                    printf("|| Nilai Tugas       : %s%-52.2f\033[0m ||\n", (currentCourse->tugas < 55) ? RED : GREEN, currentCourse->tugas);
-                    printf("|| Grade             : %s%-52s\033[0m ||\n", (currentCourse->score < 55) ? RED : GREEN, currentCourse->grade);
-                    printf("|| Nilai Rata-rata   : %s%-52.2f\033[0m ||\n", (currentCourse->score < 55) ? RED : GREEN, currentCourse->score);
+                    printf("|| Nama Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, courseArray[i]->courseName);
+                    printf("|| Kode Matakuliah   : %s%-52s\033[0m ||\n", MAGENTA, courseArray[i]->courseCode);
+                    printf("|| Nilai Kuis        : %s%-52.2f\033[0m ||\n", (courseArray[i]->kuis < 55) ? RED : GREEN, courseArray[i]->kuis);
+                    printf("|| Nilai UAS         : %s%-52.2f\033[0m ||\n", (courseArray[i]->uas < 55) ? RED : GREEN, courseArray[i]->uas);
+                    printf("|| Nilai UTS         : %s%-52.2f\033[0m ||\n", (courseArray[i]->uts < 55) ? RED : GREEN, courseArray[i]->uts);
+                    printf("|| Nilai Tugas       : %s%-52.2f\033[0m ||\n", (courseArray[i]->tugas < 55) ? RED : GREEN, courseArray[i]->tugas);
+                    printf("|| Grade             : %s%-52s\033[0m ||\n", (courseArray[i]->score < 55) ? RED : GREEN, courseArray[i]->grade);
+                    printf("|| Nilai Rata-rata   : %s%-52.2f\033[0m ||\n", (courseArray[i]->score < 55) ? RED : GREEN, courseArray[i]->score);
                     printf("++==========================================================================++\n\n");
+                    free(courseArray);
                     return;
                 }
                 selectedCourseIndex++;
             }
-            currentCourse = currentCourse->next;
         }
 
         printf("Nomor matakuliah yang Anda pilih tidak valid atau tidak memiliki nilai.\n");
     }
+
+    free(courseArray);
 }
 
 // CASE 5
