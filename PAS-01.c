@@ -1,12 +1,12 @@
 /*
-Proyek Akhir Semester - Pemrograman Lanjut 02
+Proyek Akhir Semester - Pemrograman Lanjut 02 (REVISI)
 Program Simulasi SIAK Sederhana
 
 Anggota Kelompok 1:
 1. Daffa Sayra Firdaus (2306267151)
 2. Muhamad Hakim Nizami (2306210001)
 
-Versi Program : 1.0
+Versi Program : 2.0 (Rabu, 5 Juni 2024)
 
 DISCLAIMER : 
 Program ini masih terus diubah/direvisi seiring berjalannya waktu dan mungkin berbeda dengan file yang diupload di Emas.
@@ -14,21 +14,38 @@ Untuk mendapatkan versi terbaru dan penjelasan lebih lanjut, dapat melewati link
 "https://github.com/kimnzh/final-project-group1"
 
 Deskripsi:
-Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading individu, ataupun grading keseluruhan mahasiswa beserta status mereka sebagai simulasi SIAK sederhana dengan fitur-fitur sebagai berikut:
-1. Mode Dosen
-- Program menerima input data nilai mahasiswa
-- Menghitung data tendencies dari seluruh data nilai mahasiswa
-- Mengkonfirmasi Status keaktifan masing-masing mahasiswa 
-- Mempersetujui matkul yang dipilih oleh mahasiswa berdasarkan pertimbangan batas SKS dan persyaratan nilai/IP
-- Menentukan jika mahasiswa lulus atau tidak
-- Menampilkan bagan nilai mahasiswa (tampilan secara kasar)
-- Multithreading digunakan untuk menjalankan hitungan program pada jumlah data yang sangat besar untuk meningkatkan efisiensi 
-(>50.000 data, untuk proyek akhir ini data yang diberikan hanya sedikit demi menghemat waktu dan size file yang tidak terlalu besar)
+Tujuan dari program adalah untuk melakukan olah data mahasiswa untuk grading individu, ataupun grading keseluruhan
+mahasiswa beserta status mereka sebagai simulasi SIAK sederhana dengan fitur-fitur sebagai berikut:
 
-2. Mode Mahasiswa
-- Memilih matakuliah/kelas yang dipelajari untuk satu semester
-- Membayar UKT untuk menjaga status aktif sebagai mahasiswa
-- Melihat Chart/Data nilai semester/semasa kuliah
+1. Mode Mahasiswa
+
+- Menunjukkan data diri seperti nama, NPM, angkatan, program studi, nama dosen pembimbing, status akademik, SKS yang lulus, Mutu, IPK, SKS
+  yang diperoleh, status pembayaran biaya operasional pendidikan.
+- Menampilkan indeks prestasi keseluruhan dalam bentuk grafik.
+- Mengajukan mata kuliah/kelas yang ingin ditempuh dalam satu semester (dengan persetujuan dosen pembimbing).
+- Dapat membatalkan mata kuliah yang sebelumnya diajukan, selama belum disetujui oleh dosen pembimbing.
+- Dapat melihat riwayat mata kuliah yang sudah diajukan selama perkuliahan.
+- Melihat nilai dari mata kuliah yang sudah ditempuh (dinilai oleh dosen pembimbing) (Dapat disort secara ascending ataupun descending).
+- Men-search mata kuliah yang dapat dipilih selama satu semester.
+- Dapat memilih untuk membayar biaya operasional pendidikan atau UKT, jika membayar, maka status pembayaran dianggap lunas
+- Disertai dengan panduan dalam menggunakan program dan opsi-opsi yang bisa dilakukan dalam program.
+- Mahasiswa dapat merubah profile dari mahasiswa, seperti nama dan password.
+
+2. Mode Dosen
+
+- Dosen dapat menyetujui mata kuliah yang diajukan oleh mahasiswa berdasarkan pertimbangan batas SKS dan persyaratan nilai/IP
+- Dosen dapat menilai mata kuliah yang ditempuh oleh mahasiswa bimbingan selama satu semester
+- Memilih untuk meluluskan mahasiswa bimbingan dalam satu semester
+- Menghitung data tendencies dari seluruh data nilai mahasiswa yang dibimbing
+- Mengonfirmasi status akademik atau keaktifan masing-masing mahasiswa
+- Memsetujui matkul yang dipilih oleh mahasiswa
+- Menampilkan bagan nilai mahasiswa (tampilan secara chart kasar)
+
+Selain mode mahasiswa dan dosen, terdapat pilihan untuk menambah data mahasiswa dan data dosen baru. Setiap data dari mahasiswa 
+maupun dosen, seperti nilai, mata kuliah yang diambil, dan sebagainya disimpan dalam database berupa directory yang masing-masing
+merujuk kepada satu orang mahasiswa/dosen. Untuk data pribadi seperti nama, NPM/NIP, program studi, dan lainnya disimpan dalam 
+struct yang datanya diambil (read) dari database yang menyimpan data dari masing-masing mahasiswa atau dosen. Setiap data pada 
+struct memiliki method atau function yang dikhususkan untuk meng-edit nilai yang tersimpan di dalam variabel struct tersebut.
 */
 #define _GNU_SOURCE
 #include <stdio.h>
