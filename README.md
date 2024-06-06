@@ -1,12 +1,17 @@
 # Proyek Akhir Semester - Pemrograman Lanjut 02
 # Program Simulasi SIAK Sederhana
 
+[![Screenshot-61](https://i.ibb.co.com/JHWZgLw/Screenshot-61.png)](https://ibb.co.com/9WmPSXk)
+
+[![Screenshot-61](https://i.ibb.co.com/s3WVDbN/Screenshot-62.png)](https://ibb.co.com/RHjDMYs)
+
+
 Anggota Kelompok 1:
 
 1. Daffa Sayra Firdaus (2306267151)
 2. Muhamad Hakim Nizami (2306210001)
 
-Versi Program : 1.0
+Versi Program : 2.0
 
 # Penjelasan Program
 
