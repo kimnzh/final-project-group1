@@ -1,6 +1,0 @@
-buat sistem management databasenya udah mantep dan gaada problem (harusnya), mungkin 
-kedepannya bakal gw buat lebih modular lagi
-
-problem:
-- ini pas writeaCoursesnya masih munculin null-null gitu dap, paling di situnya aja
-- interfacenya nanti bakal gw improve lagi, jadi kabarkan selalu kalo udh push 
